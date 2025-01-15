@@ -5,8 +5,10 @@
 #include<string>
 #include "view.h" 
 #include "map.h"
-
+#include "Zone.h"
 #include<windows.h>  
+
+
 using namespace std;
 using namespace sf;
 /////// Зона которая реагирует на вхождение в нее игрока 
@@ -250,9 +252,9 @@ Image map_image;
 	
 ////------	
 
-	std::vector<TriggerZone> triggerZones; // Хранилище для триггерных зон
+
     std::vector<sf::Sprite> obstacleSprites;// Хранилище для тайлов карты
-    
+    std::vector<InteractionZone> interactionZones;// Хранилище для зон карты
 ////------ 
 
 ///Растановка тайлов карты из текстового массива  
@@ -280,10 +282,10 @@ Image map_image;
         obstacleSprite.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
         obstacleSprites.push_back(obstacleSprite);
 		}
-                    if (TileMap[i][j] == 'i') { // Создание триггерной зоны
-                sf::Vector2f position(-300 + j * 100, -300 + i * 145);
-                sf::Vector2f size(300, 145); // Задайте размер триггерной зоны
-                triggerZones.emplace_back(position, size,font, "Нажмите E");
+            if (TileMap[i][j] == 'i') { // Создание триггерной зоны
+				InteractionZone zone(&window, {static_cast<float>(-100 + j * 100), static_cast<float>(-300 + i * 145)}, 
+                     {200.0f, 150.0f});
+            interactionZones.push_back(zone);
             }
   
 
@@ -358,6 +360,9 @@ if ((Keyboard::isKeyPressed(Keyboard::Space)) && upL && !up){
 	sprite.setTexture(texture[sheet]);
 	}					 
 }
+        for (auto& zone : interactionZones) {
+            zone.handleEvent(event);
+        }
         }
 	if  ((Keyboard::isKeyPressed(Keyboard::Left))){
 
@@ -606,13 +611,11 @@ for (int i = 0; i < colparalax; i++) {
         for (const sf::Sprite obstacle : obstacleSprites) {
             window.draw(obstacle);
         }
-		    for (auto& trigger : triggerZones) {
-			   
-        trigger.checkCollision(sprite);// Проверяем зашел ли игрок в зону 
-            window.draw(trigger.shape);
-        }
-        
-        
+
+    for (auto& zone : interactionZones) {
+	zone.update(sprite);
+        zone.render();
+    }
 
 ///Отрисовка карты  и ее элементов
 		        for ( sf::Sprite sprite1 : sprite1Coin2) {
