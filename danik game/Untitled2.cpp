@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp> 
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <iostream>
@@ -12,16 +12,34 @@
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Interaction Zones");
-
+	 setlocale(LC_ALL, "Russian");
     // Динамический массив объектов InteractionZone
-    InteractionZone* interactionZones = new InteractionZone[3]{
-        InteractionZone(&window, {100.0f, 100.0f}, {200.0f, 150.0f}),
-        InteractionZone(&window, {300.0f, 100.0f}, {200.0f, 150.0f}),
-        InteractionZone(&window, {500.0f, 100.0f}, {200.0f, 150.0f})
-    };
+sf::Font globalFont;
+sf::Texture globalTexture;
 
-    sf::Sprite player;  // Создаём спрайт игрока (пример, замените на ваш)
-    // Пример для игрока: загрузка текстуры, установка позиции и т.д.
+if (!globalFont.loadFromFile("ArialRegular.ttf") || !globalTexture.loadFromFile("animation/tile.png")) {
+    std::cerr << "Ошибка загрузки ресурсов.\n";
+    return -1;
+}
+
+// Передаём ресурсы в объекты
+InteractionZone* interactionZones = new InteractionZone[3]{
+    InteractionZone(&window, {100.0f, 100.0f}, {200.0f, 150.0f}),
+    InteractionZone(&window, {300.0f, 100.0f}, {200.0f, 150.0f}),
+    InteractionZone(&window, {500.0f, 100.0f}, {200.0f, 150.0f})
+};
+
+    // Создаём игрока
+    sf::Texture playerTexture;
+    if (!playerTexture.loadFromFile("animation/tile.png")) {  // Замените на реальный путь к текстуре
+        std::cerr << "Ошибка загрузки текстуры игрока!" << std::endl;
+        return -1;
+    }
+
+    sf::Sprite player;
+    player.setTexture(playerTexture);
+    player.setPosition(400.0f, 300.0f);  // Устанавливаем начальную позицию игрока
+    player.setScale(0.5f, 0.5f);         // Масштабируем спрайт игрока, если нужно
 
     sf::Event event;
     while (window.isOpen()) {
@@ -36,7 +54,24 @@ int main() {
             }
         }
 
+        // Управление игроком
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            player.move(0.0f, -0.5f);  // Движение вверх
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            player.move(0.0f, 0.5f);  // Движение вниз
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            player.move(-0.5f, 0.0f);  // Движение влево
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            player.move(0.5f, 0.0f);  // Движение вправо
+        }
+
         window.clear();
+
+        // Отображаем игрока
+        window.draw(player);
 
         // Обновляем каждый объект InteractionZone
         for (int i = 0; i < 3; ++i) {

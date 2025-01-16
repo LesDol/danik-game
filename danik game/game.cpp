@@ -92,11 +92,15 @@ int main()
     setlocale(LC_ALL, "Russian");
     sf::Clock clock;
      
+     std::srand(static_cast<unsigned>(std::time(nullptr)));
+     
      ///PARALAX
     int colparalax = 6;
     bool moveParalax =  true;
      
     std::vector<sf::Texture> paralaxTexture(colparalax);
+    
+
     
     paralaxTexture[0].loadFromFile("Paralax/Free Pixel Art Hill/PNG/Hills Layer 01.png");
     paralaxTexture[1].loadFromFile("Paralax/Free Pixel Art Hill/PNG/Hills Layer 02.png");
@@ -254,8 +258,16 @@ Image map_image;
 
 
     std::vector<sf::Sprite> obstacleSprites;// Хранилище для тайлов карты
-    std::vector<InteractionZone> interactionZones;// Хранилище для зон карты
+
 ////------ 
+	int maxZone = 3;// Переменная для хранения максимального числа возможных зон
+// Передаём ресурсы в объекты
+InteractionZone* interactionZones = new InteractionZone[3]{
+    InteractionZone(&window, {100.0f, 100.0f}, {200.0f, 150.0f}),
+    InteractionZone(&window, {300.0f, 100.0f}, {200.0f, 150.0f}),
+    InteractionZone(&window, {500.0f, 100.0f}, {200.0f, 150.0f})
+};
+    int countZones = 0;// переменная для хранения количества раставленных на карте зон , больше 3 нельзя 
 
 ///Растановка тайлов карты из текстового массива  
     
@@ -283,9 +295,10 @@ Image map_image;
         obstacleSprites.push_back(obstacleSprite);
 		}
             if (TileMap[i][j] == 'i') { // Создание триггерной зоны
-				InteractionZone zone(&window, {static_cast<float>(-100 + j * 100), static_cast<float>(-300 + i * 145)}, 
-                     {200.0f, 150.0f});
-            interactionZones.push_back(zone);
+            	interactionZones[countZones].setPosition(
+    {static_cast<float>(-100 + j * 100), static_cast<float>(-300 + i * 145)}
+);
+				countZones++;
             }
   
 
@@ -360,9 +373,9 @@ if ((Keyboard::isKeyPressed(Keyboard::Space)) && upL && !up){
 	sprite.setTexture(texture[sheet]);
 	}					 
 }
-        for (auto& zone : interactionZones) {
-            zone.handleEvent(event);
-        }
+            for (int i = 0; i < maxZone; ++i) {
+                interactionZones[i].handleEvent(event);
+            }
         }
 	if  ((Keyboard::isKeyPressed(Keyboard::Left))){
 
@@ -491,7 +504,25 @@ if (checkSpriteOverlap(rectangleX, obstacleSprites)){
   }else{
 moveParalax = true ;/// разрешение на движение паралакса	
 } 
+
+
+for(int i ; i < maxZone; ++i){
+ //Sprite Zonesprite = interactionZones[i].getZoneSprite();
+if (checkSprite(rectangleX, interactionZones[i].getZoneSprite())){
+	std::cout << "???????? ???? ??? ????: "  << "\n";
+	moveParalax = false ; /// запрет на движение паралакса	
+	if (moveR){ ///Если персонаж движется в право , то его отталкивает в лево
+	sprite.move(-speedPlaer,0);	
+	}
+	if (moveL){///Если персонаж движется в лево , то его отталкивает в право
+	sprite.move(speedPlaer,0);	
+	}
+  }else{
+moveParalax = true ;/// разрешение на движение паралакса	
+} 
 		
+}
+	
 /// ВСЕ ЧТО ЗВЯЗАНО С КОЛЛИЗИЕЙ ////		
 
 /// -------
@@ -612,11 +643,10 @@ for (int i = 0; i < colparalax; i++) {
             window.draw(obstacle);
         }
 
-    for (auto& zone : interactionZones) {
-	zone.update(sprite);
-        zone.render();
-    }
-
+        for (int i = 0; i < maxZone; ++i) {
+            interactionZones[i].update(sprite);
+            interactionZones[i].render();  // Отображаем все зоны
+        }
 ///Отрисовка карты  и ее элементов
 		        for ( sf::Sprite sprite1 : sprite1Coin2) {
 		        		 if (checkSprite(sprite, sprite1) && money[moni]) {
