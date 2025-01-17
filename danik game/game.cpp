@@ -263,11 +263,18 @@ Image map_image;
 	int maxZone = 3;// Переменная для хранения максимального числа возможных зон
 // Передаём ресурсы в объекты
 InteractionZone* interactionZones = new InteractionZone[3]{
-    InteractionZone(&window, {100.0f, 100.0f}, {200.0f, 150.0f}),
-    InteractionZone(&window, {300.0f, 100.0f}, {200.0f, 150.0f}),
-    InteractionZone(&window, {500.0f, 100.0f}, {200.0f, 150.0f})
+    InteractionZone(&window, {100.0f, 100.0f}, {400.0f, 150.0f}),
+    InteractionZone(&window, {300.0f, 100.0f}, {400.0f, 150.0f}),
+    InteractionZone(&window, {500.0f, 100.0f}, {400.0f, 150.0f})
 };
     int countZones = 0;// переменная для хранения количества раставленных на карте зон , больше 3 нельзя 
+    
+std::vector<sf::Sprite> spriteZone(maxZone);//Создаем двери
+
+for (int i = 0; i < maxZone; ++i) {
+    spriteZone[i] = interactionZones[i].getZoneSprite(); // Копирую спрайт "Двери" объекта, так как я не смог реализовать коллизию двери 
+}
+           
 
 ///Растановка тайлов карты из текстового массива  
     
@@ -506,10 +513,14 @@ moveParalax = true ;/// разрешение на движение паралакса
 } 
 
 
-for(int i ; i < maxZone; ++i){
- //Sprite Zonesprite = interactionZones[i].getZoneSprite();
-if (checkSprite(rectangleX, interactionZones[i].getZoneSprite())){
-	std::cout << "???????? ???? ??? ????: "  << "\n";
+for (int i = 0; i < maxZone; ++i) {
+    spriteZone[i].setPosition(interactionZones[i].getZoneSprite().getPosition());  
+	// Короче , это кастыль который передает значение позиции двери заранее скопированному спрайту этой же двери. 
+	//Почему то , когда таких объектов несколько , то тогда класс не может нормально передать значение спрайта двери, что делает невозможным ее коллизию 
+}
+
+
+if (checkSpriteOverlap(rectangleX, spriteZone)){
 	moveParalax = false ; /// запрет на движение паралакса	
 	if (moveR){ ///Если персонаж движется в право , то его отталкивает в лево
 	sprite.move(-speedPlaer,0);	
@@ -520,8 +531,23 @@ if (checkSprite(rectangleX, interactionZones[i].getZoneSprite())){
   }else{
 moveParalax = true ;/// разрешение на движение паралакса	
 } 
-		
-}
+//
+//for(int i ; i < maxZone; ++i){
+// //Sprite Zonesprite = interactionZones[i].getZoneSprite();
+//if (checkSprite(rectangleX,spriteZone[i])){
+//	std::cout << "РАБОТАЕТ СУКАААА" << std::endl;
+//	moveParalax = false ; /// запрет на движение паралакса	
+//	if (moveR){ ///Если персонаж движется в право , то его отталкивает в лево
+//	sprite.move(-speedPlaer,0);	
+//	}
+//	if (moveL){///Если персонаж движется в лево , то его отталкивает в право
+//	sprite.move(speedPlaer,0);	
+//	}
+//  }else{
+//moveParalax = true ;/// разрешение на движение паралакса	
+//} 
+//		
+//}
 	
 /// ВСЕ ЧТО ЗВЯЗАНО С КОЛЛИЗИЕЙ ////		
 
@@ -644,6 +670,8 @@ for (int i = 0; i < colparalax; i++) {
         }
 
         for (int i = 0; i < maxZone; ++i) {
+
+			
             interactionZones[i].update(sprite);
             interactionZones[i].render();  // Отображаем все зоны
         }

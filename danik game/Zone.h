@@ -61,13 +61,14 @@ public:
     void update(sf::Sprite& player) {
         if (zone.getGlobalBounds().intersects(player.getGlobalBounds())) {
             isPlayerInside = true;
+
         } else {
             isPlayerInside = false;
         }
     }
 
     void render() {
-        if (upDoor >= 1 && upDoor < 200) {
+        if (upDoor >= 1 && upDoor < 100) {
             performAction();
         }
         window->draw(zone);
