@@ -96,7 +96,7 @@ public:
         sf::Text equationText;
         equationText.setFont(font);
         std::ostringstream equation;
-        equation << a << "x + " << b << " = 0";
+        equation << a << "x + " << b << " = 0  "<< correctAnswer;
         equationText.setString(equation.str());
         equationText.setCharacterSize(24);
         equationText.setFillColor(sf::Color::White);
