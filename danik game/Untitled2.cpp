@@ -1,88 +1,85 @@
-#include <SFML/Graphics.hpp> 
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <iostream>
-#include <sstream>
-#include <cmath>
-#include <cstdlib>
-#include <ctime>
-#include <thread>
-#include <chrono>
-#include "Zone.h"  // Подключаем файл с классом InteractionZone
+#include <SFML/Graphics.hpp>
+#include "AIEnemy.h"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Interaction Zones");
-	 setlocale(LC_ALL, "Russian");
-    // Динамический массив объектов InteractionZone
-sf::Font globalFont;
-sf::Texture globalTexture;
+    // Создание окна
+    sf::RenderWindow window(sf::VideoMode(800, 600), "AI Enemy Example");
+    window.setFramerateLimit(60);
 
-if (!globalFont.loadFromFile("ArialRegular.ttf") || !globalTexture.loadFromFile("animation/tile.png")) {
-    std::cerr << "Ошибка загрузки ресурсов.\n";
-    return -1;
-}
+    // Часы для расчета времени кадра
+    sf::Clock clock;
 
-// Передаём ресурсы в объекты
-InteractionZone* interactionZones = new InteractionZone[3]{
-    InteractionZone(&window, {100.0f, 100.0f}, {200.0f, 150.0f}),
-    InteractionZone(&window, {300.0f, 100.0f}, {200.0f, 150.0f}),
-    InteractionZone(&window, {500.0f, 100.0f}, {200.0f, 150.0f})
-};
+    // Платформа для врага и игрока
+    sf::RectangleShape ground(sf::Vector2f(800.f, 50.f));
+    ground.setFillColor(sf::Color::Green);
+    ground.setPosition(0.f, 550.f);
 
-    // Создаём игрока
-    sf::Texture playerTexture;
-    if (!playerTexture.loadFromFile("animation/tile.png")) {  // Замените на реальный путь к текстуре
-        std::cerr << "Ошибка загрузки текстуры игрока!" << std::endl;
-        return -1;
-    }
+    // Создание врага
+    AIEnemy enemy(200.f, 500.f, 150.f);
 
-    sf::Sprite player;
-    player.setTexture(playerTexture);
-    player.setPosition(400.0f, 300.0f);  // Устанавливаем начальную позицию игрока
-    player.setScale(0.5f, 0.5f);         // Масштабируем спрайт игрока, если нужно
+    // Создание игрока
+    sf::RectangleShape player(sf::Vector2f(50.f, 50.f));
+    player.setFillColor(sf::Color::Blue);
+    player.setPosition(100.f, 500.f);
+    enemy.setScale(2, 2);
 
-    sf::Event event;
+    // Скорость игрока
+    const float playerSpeed = 200.f;
+
+    // Гравитация
+    float velocityY = 0.f;
+    const float gravity = 500.f;
+    const float jumpForce = -300.f;
+    bool onGround = true;
+
     while (window.isOpen()) {
+        sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-
-            // Обрабатываем события для каждого объекта зоны взаимодействия
-            for (int i = 0; i < 3; ++i) {
-                interactionZones[i].handleEvent(event);
-            }
         }
+
+        // Расчет времени кадра
+        float deltaTime = clock.restart().asSeconds();
 
         // Управление игроком
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            player.move(0.0f, -0.5f);  // Движение вверх
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            player.move(0.0f, 0.5f);  // Движение вниз
-        }
+        sf::Vector2f movement(0.f, 0.f);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            player.move(-0.5f, 0.0f);  // Движение влево
+            movement.x -= playerSpeed * deltaTime;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            player.move(0.5f, 0.0f);  // Движение вправо
+            movement.x += playerSpeed * deltaTime;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && onGround) {
+            velocityY = jumpForce;
+            onGround = false;
         }
 
+        // Применение гравитации
+        velocityY += gravity * deltaTime;
+        movement.y += velocityY * deltaTime;
+
+        // Перемещение игрока
+        player.move(movement);
+
+        // Проверка на землю
+        if (player.getGlobalBounds().intersects(ground.getGlobalBounds())) {
+            player.setPosition(player.getPosition().x, ground.getPosition().y - player.getSize().y);
+            velocityY = 0.f;
+            onGround = true;
+        }
+
+        // Обновление врага
+        enemy.update(deltaTime, player.getPosition(), ground.getGlobalBounds());
+
+        // Рендеринг
         window.clear();
-
-        // Отображаем игрока
+        window.draw(ground);
         window.draw(player);
-
-        // Обновляем каждый объект InteractionZone
-        for (int i = 0; i < 3; ++i) {
-            interactionZones[i].update(player);
-            interactionZones[i].render();  // Отображаем все зоны
-        }
-
+        enemy.render(window); // Отрисовка врага
         window.display();
     }
-
-    delete[] interactionZones;  // Освобождаем память для динамического массива
 
     return 0;
 }

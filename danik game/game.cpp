@@ -6,6 +6,7 @@
 #include "view.h" 
 #include "map.h"
 #include "Zone.h"
+#include "AIenemy.h"
 #include<windows.h>  
 
 
@@ -278,38 +279,44 @@ for (int i = 0; i < maxZone; ++i) {
 
 ///Растановка тайлов карты из текстового массива  
     
- 		for (int i = 0; i < HEIGHT_MAP; i++)
-		for (int j = 0; j < WIDTH_MAP; j++){if((TileMap[i][j] == '0')){
-		        sf::Sprite obstacleSprite(obstacleTexture);
-        obstacleSprite.setTextureRect(IntRect(0, 100, 100, 35));
-        obstacleSprite.setPosition(-100 + j * 100, -300 + i * 145);
-        obstacleSprites.push_back(obstacleSprite);}
-        if((TileMap[i][j] == 'p')){
-        sprite.setPosition(-100 + j * 100, -300 + i * 145);
-        SpawnPlayerPosition = Vector2f(-100 + j * 100, -300 + i * 145);
-		}
-		if((TileMap[i][j] == 's')){
-		        sf::Sprite obstacleSprite(obstacleTexture);
-        obstacleSprite.setTextureRect(IntRect(0, 100, 100, 145));
-        obstacleSprite.setPosition(-100 + j * 100, -300 + i * 145);
-        obstacleSprites.push_back(obstacleSprite);
-		}
-        
-                if((TileMap[i][j] == 'g')){
-		        sf::Sprite obstacleSprite(obstacleTexture);
-        obstacleSprite.setTextureRect(IntRect(0, 100, 100, 35));
-        obstacleSprite.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
-        obstacleSprites.push_back(obstacleSprite);
-		}
-            if (TileMap[i][j] == 'i') { // Создание триггерной зоны
-            	interactionZones[countZones].setPosition(
-    {static_cast<float>(-100 + j * 100), static_cast<float>(-300 + i * 145)}
-);
-				countZones++;
-            }
-  
+std::vector<AIEnemy> enemies; // Хранение врагов
 
+for (int i = 0; i < HEIGHT_MAP; i++) {
+    for (int j = 0; j < WIDTH_MAP; j++) {
+        if ((TileMap[i][j] == '0')) {
+            sf::Sprite obstacleSprite(obstacleTexture);
+            obstacleSprite.setTextureRect(IntRect(0, 100, 100, 35));
+            obstacleSprite.setPosition(-100 + j * 100, -300 + i * 145);
+            obstacleSprites.push_back(obstacleSprite);
+        }
+        if ((TileMap[i][j] == 'p')) {
+            sprite.setPosition(-100 + j * 100, -300 + i * 145);
+            SpawnPlayerPosition = Vector2f(-100 + j * 100, -300 + i * 145);
+        }
+        if ((TileMap[i][j] == 's')) {
+            sf::Sprite obstacleSprite(obstacleTexture);
+            obstacleSprite.setTextureRect(IntRect(0, 100, 100, 145));
+            obstacleSprite.setPosition(-100 + j * 100, -300 + i * 145);
+            obstacleSprites.push_back(obstacleSprite);
+        }
+        if ((TileMap[i][j] == 'g')) {
+            sf::Sprite obstacleSprite(obstacleTexture);
+            obstacleSprite.setTextureRect(IntRect(0, 100, 100, 35));
+            obstacleSprite.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+            obstacleSprites.push_back(obstacleSprite);
+        }
+        if (TileMap[i][j] == 'i') { // Создание триггерной зоны
+            interactionZones[countZones].setPosition(
+                {static_cast<float>(-100 + j * 100), static_cast<float>(-300 + i * 145)});
+            countZones++;
+        }
+        if (TileMap[i][j] == 'e') { // Создание врага
+            AIEnemy enemy(-100 + j * 100, -300 + i * 145, 150.f);
+            enemy.setScale(2.f, 2.f); // Устанавливаем размер врага
+            enemies.push_back(enemy);
+        }
     }
+}
 ///Растановка тайлов карты из текстового массива  
     
 ////------
@@ -670,11 +677,14 @@ for (int i = 0; i < colparalax; i++) {
         }
 
         for (int i = 0; i < maxZone; ++i) {
-
-			
             interactionZones[i].update(sprite);
             interactionZones[i].render();  // Отображаем все зоны
         }
+        float deltaTime = clock.restart().asSeconds();
+        for (auto& enemy : enemies) {
+    enemy.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemy.render(window); // Отрисовка врага
+}
 ///Отрисовка карты  и ее элементов
 		        for ( sf::Sprite sprite1 : sprite1Coin2) {
 		        		 if (checkSprite(sprite, sprite1) && money[moni]) {

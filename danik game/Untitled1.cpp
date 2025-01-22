@@ -1,41 +1,20 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include "AIenemy.h"
+#include "Animation.h"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "AI Enemy Example");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Simplified Animation");
     window.setFramerateLimit(60);
 
-    // ????????
-    sf::Texture playerTexture;
-    sf::Texture enemyTexture;
-
-    if (!playerTexture.loadFromFile("animation/slime.png")) {
-        std::cerr << "Failed to load player texture" << std::endl;
-        return -1; // ?????? ???????? ???????? ??????
-    }
-    if (!enemyTexture.loadFromFile("animation/slime.png")) {
-        std::cerr << "Failed to load enemy texture" << std::endl;
-        return -1; // ?????? ???????? ???????? ?????
+    Animation walkAnimation;
+    if (!walkAnimation.loadFromFile("animation/slime_walk.png", 32, 32)) {
+        std::cerr << "Failed to load animation" << std::endl;
+        return -1;
     }
 
-    // ?????
-    sf::Sprite player(playerTexture);
-    player.setPosition(100.f, 500.f);
-    player.setScale(0.1f, 0.1f);
+    walkAnimation.setSpeed(0.15f); // 150 мс на кадр
 
-    // ???
-    sf::RectangleShape ground(sf::Vector2f(800.f, 50.f));
-    ground.setPosition(0.f, 550.f);
-    ground.setFillColor(sf::Color::Green);
-
-    // ????
-    AIEnemy enemy(400.f, 500.f, 200.f);
-    enemy.setTexture(enemyTexture);
-    enemy.setScale(0.1f, 0.1f);
-
-    // ?????? ???????? ????? (????????, 100 ???????? ? ???????)
-    enemy.setSpeed(100.f);
+    sf::Vector2f enemyPosition(400.f, 500.f);
+    bool facingRight = true;
 
     sf::Clock clock;
 
@@ -46,29 +25,23 @@ int main() {
                 window.close();
         }
 
-        // ?????? ??????????? ??????
         float deltaTime = clock.restart().asSeconds();
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            player.move(-200.f * deltaTime, 0.f);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            player.move(200.f * deltaTime, 0.f);
+
+        // Управление направлением
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            enemyPosition.x += 100.f * deltaTime;
+            facingRight = true;
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+            enemyPosition.x -= 100.f * deltaTime;
+            facingRight = false;
         }
 
-        // ?????????? ?????
-        enemy.update(deltaTime, player.getPosition(), ground.getGlobalBounds());
+        // Обновление анимации
+        walkAnimation.update(deltaTime);
 
-        // ???????? ???????????? ? ???????
-        if (enemy.checkCollision(player.getGlobalBounds())) {
-            player.setColor(sf::Color::Yellow); // ????????? ????? ??? ????????????
-        } else {
-            player.setColor(sf::Color::White);
-        }
-
-        // ?????????
+        // Рендеринг
         window.clear();
-        window.draw(ground);
-        window.draw(player);
-        enemy.render(window);
+        walkAnimation.render(window, enemyPosition, facingRight);
         window.display();
     }
 
