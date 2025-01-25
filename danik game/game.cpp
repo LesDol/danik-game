@@ -8,92 +8,40 @@
 #include "Zone.h"
 #include "AIenemy.h"
 #include<windows.h>  
-
-
+#include "EngineManager.h"
 using namespace std;
 using namespace sf;
-/////// Зона которая реагирует на вхождение в нее игрока 
-struct TriggerZone {
-    sf::RectangleShape shape;
-    sf::Text text;
-    bool isPlayerInside = false;
-
-    TriggerZone(sf::Vector2f position, sf::Vector2f size, const sf::Font& font, const std::string& message) {
-        // Инициализация формы зоны
-        shape.setPosition(position);
-        shape.setSize(size);
-        shape.setFillColor(sf::Color(255, 0, 0, 100)); // Полупрозрачный красный
-
-        // Инициализация текста
-        text.setFont(font);
-        text.setString(message);
-        text.setCharacterSize(24);
-        text.setFillColor(sf::Color::White); // Белый цвет текста
-        text.setOutlineColor(sf::Color::Black); // Чёрная обводка
-        text.setOutlineThickness(2);
-        text.setPosition(position.x, position.y - 30); // Располагаем текст над зоной
-    }
-
-    // Метод проверки вхождения спрайта в зону
-    void checkCollision(const sf::Sprite& sprite) {
-        isPlayerInside = shape.getGlobalBounds().intersects(sprite.getGlobalBounds());
-    }
-
-
-    // Метод отрисовки зоны и текста
-    void draw(sf::RenderWindow& window) {
-        window.draw(shape);
-        if (isPlayerInside) {
-            window.draw(text);
-        }
-    }
-};
-/////// Зона которая реагирует на вхождение в нее игрока 
-
-/////PARALAX
-
-/////Функция для подсчета количества кадров в текстуре
-sf::Vector2f getAspectRatio(const sf::Texture& texture,float& aspectRatio){
-    sf::Vector2u size = texture.getSize();
-    aspectRatio = static_cast<float>(size.y) / size.x;
-    return sf::Vector2f(aspectRatio, 1.0f);
-}
-/////Булевая Функция для проверки коллизиии
-bool checkSpriteOverlap(sf::Sprite playerSprite, std::vector<sf::Sprite> otherSprites) {
-    sf::FloatRect playerBounds = playerSprite.getGlobalBounds();
-
-    for (const sf::Sprite& otherSprite : otherSprites) {
-        sf::FloatRect otherBounds = otherSprite.getGlobalBounds();
-
-        if (playerBounds.intersects(otherBounds)) {
-            return true;
-        }
-    }
-    
-    return false; 
-}
-/////Булевая Функция для проверки коллизиии
-bool checkSprite(sf::Sprite playerSprite, sf::Sprite otherSprite) {
-    sf::FloatRect playerBounds = playerSprite.getGlobalBounds();
-    sf::FloatRect otherBounds = otherSprite.getGlobalBounds();
-    if (playerBounds.intersects(otherBounds)) {
-        return true;
-    }
-    return false;
-}
-//Функции
 
 //---------------------------------------------------------------------
 
 ///MAIN///MAIN///MAIN///MAIN///MAIN///MAIN///MAIN///MAIN///MAIN///MAIN
 int main()
 {
+	
     sf::RenderWindow window(sf::VideoMode(1200, 720), "SFML Keyboard Input");
     window.setFramerateLimit(45);
     setlocale(LC_ALL, "Russian");
     sf::Clock clock;
      
      std::srand(static_cast<unsigned>(std::time(nullptr)));
+     
+     
+     
+     Sprite heal[3];
+     Texture healTexture;
+     healTexture.loadFromFile("animation/heal.png");
+     for(int i = 0 ; i < 3; i++ ){
+     heal[i].setTexture(healTexture);
+     heal[i].setScale(0.03,0.03);
+	 }
+
+
+sf::Vector2i screenPos(50, 25); // Позиция элемента на экране
+sf::Vector2i coutMoneyPos(50, 125);
+
+// Конвертируем экранные координаты в мировые
+
+     
      
      ///PARALAX
     int colparalax = 6;
@@ -278,8 +226,23 @@ for (int i = 0; i < maxZone; ++i) {
            
 
 ///Растановка тайлов карты из текстового массива  
-    
-std::vector<AIEnemy> enemies; // Хранение врагов
+    //std::vector<AIEnemy> enemies; // Хранение врагов
+
+AIEnemy enemies1(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+AIEnemy enemies2(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+AIEnemy enemies3(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+AIEnemy enemies4(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+AIEnemy enemies5(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+AIEnemy enemies6(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+AIEnemy enemies7(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+AIEnemy enemies8(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+AIEnemy enemies9(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+AIEnemy enemies10(-100 + 4 * 100, -300 + 2 * -145, 150.f);
+
+int coutEnemy = 0 ; 
+
+
+            
 
 for (int i = 0; i < HEIGHT_MAP; i++) {
     for (int j = 0; j < WIDTH_MAP; j++) {
@@ -310,10 +273,54 @@ for (int i = 0; i < HEIGHT_MAP; i++) {
                 {static_cast<float>(-100 + j * 100), static_cast<float>(-300 + i * 145)});
             countZones++;
         }
-        if (TileMap[i][j] == 'e') { // Создание врага
-            AIEnemy enemy(-100 + j * 100, -300 + i * 145, 150.f);
-            enemy.setScale(2.f, 2.f); // Устанавливаем размер врага
-            enemies.push_back(enemy);
+        if (TileMap[i][j] == 'e') { // Создание врага    
+		coutEnemy++;    
+switch (coutEnemy) {
+    case 1:
+       enemies1.setScale(2.5,2.5);
+       enemies1.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+        break;
+    case 2:
+        enemies2.setScale(2.5,2.5);
+       enemies2.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+        break;
+    case 3:
+       enemies3.setScale(2.5,2.5);
+       enemies3.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+        break;
+    case 4:
+       enemies4.setScale(2.5,2.5);
+       enemies4.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+    break;
+    case 5:
+       enemies5.setScale(2.5,2.5);
+       enemies5.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+    break;
+    case 6:
+       enemies6.setScale(2.5,2.5);
+       enemies6.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+    break;
+        case 7:
+       enemies7.setScale(2.5,2.5);
+       enemies7.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+    break;
+        case 8:
+       enemies8.setScale(2.5,2.5);
+       enemies8.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+    break;
+        case 9:
+       enemies9.setScale(2.5,2.5);
+       enemies9.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+    break;
+        case 10:
+       enemies10.setScale(2.5,2.5);
+       enemies10.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
+    break;
+
+    default:
+      
+        break;
+}
         }
     }
 }
@@ -322,7 +329,6 @@ for (int i = 0; i < HEIGHT_MAP; i++) {
 ////------
 
 std::vector<sf::Sprite> sprite1Coin2;// Хранилище для спрайтов монет
-
 for (int i = 0; i < HEIGHT_MAP; i++) {
     for (int j = 0; j < WIDTH_MAP; j++) {
         if (TileMap[i][j] == 'm') {
@@ -538,22 +544,7 @@ if (checkSpriteOverlap(rectangleX, spriteZone)){
   }else{
 moveParalax = true ;/// разрешение на движение паралакса	
 } 
-//
-//for(int i ; i < maxZone; ++i){
-// //Sprite Zonesprite = interactionZones[i].getZoneSprite();
-//if (checkSprite(rectangleX,spriteZone[i])){
-//	std::cout << "РАБОТАЕТ СУКАААА" << std::endl;
-//	moveParalax = false ; /// запрет на движение паралакса	
-//	if (moveR){ ///Если персонаж движется в право , то его отталкивает в лево
-//	sprite.move(-speedPlaer,0);	
-//	}
-//	if (moveL){///Если персонаж движется в лево , то его отталкивает в право
-//	sprite.move(speedPlaer,0);	
-//	}
-//  }else{
-//moveParalax = true ;/// разрешение на движение паралакса	
-//} 
-//		
+//	
 //}
 	
 /// ВСЕ ЧТО ЗВЯЗАНО С КОЛЛИЗИЕЙ ////		
@@ -610,8 +601,7 @@ coinH = 0;
         }
     sf::Vector2f playerPosition(x, y);
     getplayercoordinateforview(x,y) ;
-    spriteCoin.setPosition(x-550 ,y-325);
-	text.setPosition(view.getCenter().x-500 , view.getCenter().y-325);
+
 	
 	
 ///---------------------------------------------------	
@@ -680,11 +670,35 @@ for (int i = 0; i < colparalax; i++) {
             interactionZones[i].update(sprite);
             interactionZones[i].render();  // Отображаем все зоны
         }
-        float deltaTime = clock.restart().asSeconds();
-        for (auto& enemy : enemies) {
-    enemy.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
-    enemy.render(window); // Отрисовка врага
-}
+
+        	        
+////        for (auto& enemy : enemies) {
+
+
+
+	//float deltaTime = clock.restart().asSeconds();
+	//std::cout<<deltaTime<< endl;
+	float deltaTime = 0.022f;
+    enemies1.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies1.render(window); // Отрисовка врага	
+    enemies2.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies2.render(window);
+    enemies3.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies3.render(window);
+    enemies4.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies4.render(window);
+    enemies5.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies5.render(window);
+        enemies6.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies6.render(window);
+        enemies7.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies7.render(window);
+        enemies8.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies8.render(window);
+        enemies9.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies9.render(window);
+        enemies10.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies10.render(window);
 ///Отрисовка карты  и ее элементов
 		        for ( sf::Sprite sprite1 : sprite1Coin2) {
 		        		 if (checkSprite(sprite, sprite1) && money[moni]) {
@@ -714,6 +728,28 @@ for (int i = 0; i < colparalax; i++) {
 	  }
       
       ////Доработка 
+      
+      
+      
+      
+      sf::Vector2f worldPos = window.mapPixelToCoords(screenPos, view);
+      
+
+// Отображаем элемент в мировых координатах
+
+
+    spriteCoin.setPosition(worldPos.x ,worldPos.y + 50);
+	text.setPosition(worldPos.x + 50 ,worldPos.y + 50);
+
+for(int i = 0 ; i < 3; i++ ){
+heal[i].setPosition(worldPos.x + 40 * i,worldPos.y);
+window.draw(heal[i]);	
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)){
+    	heal[i].setColor(sf::Color::Black);
+	}
+
+}
 
         window.display();
     }

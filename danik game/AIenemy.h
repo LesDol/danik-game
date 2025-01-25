@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "Animation.h"
+#include <vector>
 
 class AIEnemy {
 public:
@@ -16,6 +17,7 @@ public:
     bool checkCollision(const sf::FloatRect& playerBounds) const;
     void setTexture(const sf::Texture& texture);
     void setSpeed(float speed);
+    void setPosition(float AddposX, float AddposY);
 
 private:
 	    const sf::Sprite& getSprite() const {
@@ -38,6 +40,9 @@ private:
     bool onGround;
     float sizeX , sizeY;
     sf::Clock patrolTimer;
+    float gravity = 1.f;       // Ускорение падения
+    float maxFallSpeed = 10.f; // Максимальная скорость падения
+  
 	
     sf::Sprite sprite;
     
@@ -51,8 +56,8 @@ private:
 
 AIEnemy::AIEnemy(float x, float y, float patrolDistance)
     : position(x, y), patrolDistance(patrolDistance), movingRight(true), isPlayerInRange(false), onGround(false), speed(50.f),
-      walkAnimation("EnemySprites/Slime/FreeSlime/slime_run.png", sprite, 6), // 10 — ???????? ????? ???????
-      idleAnimation("EnemySprites/Slime/FreeSlime/slime_idle.png", sprite, 9) // 15 — ???????? ????? ???????
+      walkAnimation("EnemySprites/Slime/FreeSlime/slime_run.png", sprite, 4), // 10 — ???????? ????? ???????
+      idleAnimation("EnemySprites/Slime/FreeSlime/slime_idle.png", sprite, 4) // 15 — ???????? ????? ???????
 {
     velocity = sf::Vector2f(0.f, 0.f);
     zoneRadius = 150.f; // ?????? ?????????
@@ -72,7 +77,7 @@ void AIEnemy::update(float deltaTime, const sf::Vector2f& playerPosition, const 
     move(deltaTime);
 
     // Определяем, какую анимацию использовать
-    if (std::abs(velocity.x) > 0.1f) {
+    if (std::abs(velocity.x) > 0.1f || std::abs(velocity.x) < -0.1f) {
         // Если враг движется, используем анимацию ходьбы
         walkAnimation.updateAnimation(sprite);
     } else {
@@ -84,10 +89,16 @@ void AIEnemy::update(float deltaTime, const sf::Vector2f& playerPosition, const 
 
 void AIEnemy::applyGravity(float deltaTime) {
     if (!onGround) {
-        velocity.y += 9.8f * deltaTime; // Простая модель гравитации
+        velocity.y += gravity * deltaTime; // Увеличиваем скорость падения
+        if (velocity.y > maxFallSpeed) {
+            velocity.y = maxFallSpeed; // Ограничение скорости падения
+        }
+    } else {
+        velocity.y = 0; // Обнуляем скорость при контакте с землёй
     }
-}
 
+    sprite.move(0, velocity.y); // Применяем смещение
+}
 void AIEnemy::checkPlayerInRange(const sf::Vector2f& playerPosition) {
     float distanceToPlayer = sqrt(pow(playerPosition.x - position.x, 2) + pow(playerPosition.y - position.y, 2));
     isPlayerInRange = (distanceToPlayer <= zoneRadius);
@@ -99,15 +110,15 @@ void AIEnemy::patrol(float deltaTime, const sf::Vector2f& playerPosition) {
         bool newMovingRight = (playerPosition.x > position.x);
         float newVelocityX = newMovingRight ? speed : -speed;
 
-        if (newMovingRight != movingRight) {
-            // Смена направления, смещаем спрайт
-            float offset = sprite.getGlobalBounds().width;
-            position.x += newMovingRight ? -offset : offset;
-            sprite.setPosition(position);
-            movingRight = newMovingRight; // Обновляем направление
-        }
+//        if (newMovingRight != movingRight) {
+//            // Смена направления, смещаем спрайт
+//            float offset = sprite.getGlobalBounds().width;
+//            position.x += newMovingRight ? -offset : offset;
+//            sprite.setPosition(position);
+//            movingRight = newMovingRight; // Обновляем направление
+//        }
 
-        velocity.x = newVelocityX;
+//        velocity.x = newVelocityX;
     } else {
         // Рандомное патрулирование
         if (patrolTimer.getElapsedTime().asSeconds() > 3.0f) {
@@ -144,40 +155,36 @@ void AIEnemy::patrol(float deltaTime, const sf::Vector2f& playerPosition) {
 }
 
 
-void AIEnemy::checkGroundCollision(const std::vector<sf::Sprite>& groundSprites) {
+void AIEnemy::checkGroundCollision(const std::vector<sf::Sprite>& groundSprites) { 
     sf::FloatRect enemyBounds = sprite.getGlobalBounds();
-
-    // Проверка соприкосновения с каждым спрайтом земли
-    onGround = false; // Сброс состояния "на земле"
+    enemyBounds.top -= 17.f; // Поднимаем проверку на 17 пикселей вверх
+    onGround = false;
 
     for (const auto& groundSprite : groundSprites) {
         sf::FloatRect groundBounds = groundSprite.getGlobalBounds();
 
-        sf::FloatRect probeBounds = enemyBounds;
-        probeBounds.top += 1.f; // Смещение вниз для проверки земли
-
-        if (groundBounds.intersects(probeBounds)) {
-            onGround = true; // Враг находится на земле
-            break;          // Достаточно найти одно пересечение
+        // Проверка на нахождение на земле
+        if (groundBounds.intersects(enemyBounds) && 
+            enemyBounds.top + enemyBounds.height <= groundBounds.top + 5.f) {
+            onGround = true;
+            sprite.setPosition(sprite.getPosition().x, groundBounds.top - (enemyBounds.height - 17.f));
+            break;
         }
-    }
 
-    // Если враг уходит за пределы земли, меняем направление
-    if (onGround) {
-        for (const auto& groundSprite : groundSprites) {
-            sf::FloatRect groundBounds = groundSprite.getGlobalBounds();
-
-            if (movingRight && (enemyBounds.left + enemyBounds.width > groundBounds.left + groundBounds.width)) {
-                movingRight = false;
-                break;
-            } else if (!movingRight && (enemyBounds.left < groundBounds.left)) {
-                movingRight = true;
-                break;
+        // Проверка на столкновение по горизонтали
+        if (groundBounds.intersects(enemyBounds)) {
+            if (enemyBounds.left < groundBounds.left && 
+                enemyBounds.left + enemyBounds.width > groundBounds.left) {
+                // Столкновение с правой стороной препятствия
+                sprite.setPosition(groundBounds.left - enemyBounds.width, sprite.getPosition().y);
+            } else if (enemyBounds.left > groundBounds.left && 
+                       enemyBounds.left < groundBounds.left + groundBounds.width) {
+                // Столкновение с левой стороной препятствия
+                sprite.setPosition(groundBounds.left + groundBounds.width, sprite.getPosition().y);
             }
         }
     }
 }
-
 
 void AIEnemy::move(float deltaTime) {
     sprite.move(velocity.x * deltaTime, velocity.y * deltaTime);
@@ -214,6 +221,9 @@ void AIEnemy::setScale(float AddsizeX, float AddsizeY) {
 	sizeX = AddsizeX;
 	sizeY = AddsizeY;
     sprite.setScale(sizeX, sizeY);
+}
+void AIEnemy::setPosition(float AddposX, float AddposY) {
+    sprite.setPosition(AddposX, AddposY);
 }
 
 #endif // AIENEMY_H
