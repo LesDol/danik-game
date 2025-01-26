@@ -6,6 +6,15 @@
 #include <vector>
 #include<windows.h> 
 
+
+
+
+#include "Library/view.h" 
+#include "Library/map.h"
+#include "Library/Zone.h"
+#include "Library/AIenemy.h"
+#include "Library/GameObject.h"
+
 using namespace std;
 using namespace sf; 
 /////// Зона которая реагирует на вхождение в нее игрока 
@@ -96,3 +105,8 @@ void renderGameObjects(sf::RenderWindow& window, sf::View& view,
 }
 
 //Функции
+
+//Slime
+
+
+//Slime

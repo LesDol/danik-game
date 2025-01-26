@@ -11,7 +11,8 @@ class AIEnemy {
 public:
     AIEnemy(float x, float y, float patrolDistance);
     void update(float deltaTime, const sf::Vector2f& playerPosition, const std::vector<sf::Sprite>& groundSprites);
-    void render(sf::RenderWindow& window);
+    void render(sf::RenderWindow& window) const;
+
     void setScale(float x, float y);
     sf::Vector2f getPosition() const;
     bool checkCollision(const sf::FloatRect& playerBounds) const;
@@ -208,7 +209,7 @@ bool AIEnemy::checkCollision(const sf::FloatRect& playerBounds) const {
     return enemyBounds.intersects(playerBounds);
 }
 
-void AIEnemy::render(sf::RenderWindow& window) {
+void AIEnemy::render(sf::RenderWindow& window) const{
     window.draw(sprite);
 }
 

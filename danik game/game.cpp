@@ -1,13 +1,4 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include<locale>
-#include<sstream>
-#include<string>
-#include "view.h" 
-#include "map.h"
-#include "Zone.h"
-#include "AIenemy.h"
-#include<windows.h>  
+#include <SFML/Graphics.hpp> 
 #include "EngineManager.h"
 using namespace std;
 using namespace sf;
@@ -241,7 +232,7 @@ AIEnemy enemies10(-100 + 4 * 100, -300 + 2 * -145, 150.f);
 
 int coutEnemy = 0 ; 
 
-
+Key key(400.f, 300.f, 2.0f);
             
 
 for (int i = 0; i < HEIGHT_MAP; i++) {
@@ -322,7 +313,10 @@ switch (coutEnemy) {
         break;
 }
         }
-    }
+    if(TileMap[i][j] == 'k'){
+    	key.setPosition(-80 + j * 100, -300 + (i * 145) + 80);
+	}
+	}
 }
 ///Растановка тайлов карты из текстового массива  
     
@@ -689,16 +683,19 @@ for (int i = 0; i < colparalax; i++) {
     enemies4.render(window);
     enemies5.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
     enemies5.render(window);
-        enemies6.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies6.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
     enemies6.render(window);
-        enemies7.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies7.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
     enemies7.render(window);
-        enemies8.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies8.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
     enemies8.render(window);
-        enemies9.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies9.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
     enemies9.render(window);
-        enemies10.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies10.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
     enemies10.render(window);
+    
+      	key.update(deltaTime,sprite);
+		key.render(window);
 ///Отрисовка карты  и ее элементов
 		        for ( sf::Sprite sprite1 : sprite1Coin2) {
 		        		 if (checkSprite(sprite, sprite1) && money[moni]) {

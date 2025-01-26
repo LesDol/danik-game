@@ -71,7 +71,7 @@ public:
         if (upDoor >= 1 && upDoor < 100) {
             performAction();
         }
-        window->draw(zone);
+        //window->draw(zone);
         window->draw(zoneSprite);
         if (isPlayerInside && !isAnswerWindowOpen && !actionCompleted) {
             window->draw(message);
@@ -122,6 +122,7 @@ public:
             while (answerWindow.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
                     answerWindow.close();
+                    isAnswerWindowOpen = false;
                 }
 
                 if (event.type == sf::Event::TextEntered) {
