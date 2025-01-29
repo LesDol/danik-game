@@ -25,7 +25,7 @@ int main()
      heal[i].setTexture(healTexture);
      heal[i].setScale(0.03,0.03);
 	 }
-
+	int CoutHeal = 3;
 
 sf::Vector2i screenPos(50, 25); // Позиция элемента на экране
 sf::Vector2i coutMoneyPos(50, 125);
@@ -165,6 +165,7 @@ rectangleX.setColor(Color(0,0,255));
     sprite.setTexture(texture[sheet]);
     sprite.setPosition(1,-50);
     sprite.setScale(2.0f,2.0f);
+    bool AttackPlayer = false;
 //Создание спрайта игрока
 
  
@@ -489,9 +490,12 @@ if ((Keyboard::isKeyPressed(Keyboard::Right))){
 		}
 
  
-//if(j==frame){
-//    	j=0;
-//	}	
+ if(AttackPlayer == true){
+ 	cout<<"Attack"<<endl;
+ 	AttackPlayer = false;
+ }
+
+	
 int totalFrames = texture[sheet].getSize().x / 50; 
 j = (j + 1) % totalFrames;
 
@@ -536,7 +540,7 @@ if (checkSpriteOverlap(rectangleX, spriteZone)){
 	sprite.move(speedPlaer,0);	
 	}
   }else{
-moveParalax = true ;/// разрешение на движение паралакса	
+	
 } 
 //	
 //}
@@ -673,25 +677,25 @@ for (int i = 0; i < colparalax; i++) {
 	//float deltaTime = clock.restart().asSeconds();
 	//std::cout<<deltaTime<< endl;
 	float deltaTime = 0.022f;
-    enemies1.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies1.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies1.render(window); // Отрисовка врага	
-    enemies2.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies2.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies2.render(window);
-    enemies3.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies3.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies3.render(window);
-    enemies4.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies4.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies4.render(window);
-    enemies5.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies5.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies5.render(window);
-    enemies6.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies6.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies6.render(window);
-    enemies7.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies7.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies7.render(window);
-    enemies8.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies8.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies8.render(window);
-    enemies9.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies9.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies9.render(window);
-    enemies10.update(deltaTime, sprite.getPosition(), obstacleSprites); // Обновление врага
+    enemies10.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
     enemies10.render(window);
     
       	key.update(deltaTime,sprite);

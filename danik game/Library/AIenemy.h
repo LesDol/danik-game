@@ -10,7 +10,7 @@
 class AIEnemy {
 public:
     AIEnemy(float x, float y, float patrolDistance);
-    void update(float deltaTime, const sf::Vector2f& playerPosition, const std::vector<sf::Sprite>& groundSprites);
+    void update(float deltaTime, const sf::Vector2f& playerPosition, const std::vector<sf::Sprite>& groundSprites, bool& AttackPlayer);
     void render(sf::RenderWindow& window) const;
 
     void setScale(float x, float y);
@@ -70,9 +70,10 @@ void AIEnemy::setSpeed(float newSpeed) {
     speed = newSpeed;
 }
 
-void AIEnemy::update(float deltaTime, const sf::Vector2f& playerPosition, const std::vector<sf::Sprite>& groundSprites) {
+void AIEnemy::update(float deltaTime, const sf::Vector2f& playerPosition, const std::vector<sf::Sprite>& groundSprites,bool& AttackPlayer) {
     applyGravity(deltaTime);
-    checkPlayerInRange(playerPosition);
+
+	checkPlayerInRange(playerPosition);
     patrol(deltaTime, playerPosition);
     checkGroundCollision(groundSprites); // ???????? ??????? ????????
     move(deltaTime);
