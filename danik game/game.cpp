@@ -16,7 +16,26 @@ int main()
      
      std::srand(static_cast<unsigned>(std::time(nullptr)));
      
+     //UI
      
+         ///Шрифт
+    sf::Font font; 
+    font.loadFromFile("ArialRegular.ttf");
+    int coolDown;
+    ///Шрифт
+     
+     Sprite keyUI;
+     Texture keyUITexture;
+     keyUITexture.loadFromFile("GameObjects/key/keyUI.png");
+     keyUI.setTexture(keyUITexture);
+     keyUI.setScale(1.5,1.5);
+     Text keyUItext;
+     keyUItext.setFont(font);
+     keyUItext.setCharacterSize(25);
+     keyUItext.setOutlineThickness(3);
+     keyUItext.setOutlineColor(sf::Color::Black);
+     keyUItext.setFillColor(sf::Color::White);
+     keyUItext.setString("0");
      
      Sprite heal[3];
      Texture healTexture;
@@ -26,6 +45,9 @@ int main()
      heal[i].setScale(0.03,0.03);
 	 }
 	int CoutHeal = 3;
+	int attackCooldown = 0; 
+	
+	//UI
 
 sf::Vector2i screenPos(50, 25); // Позиция элемента на экране
 sf::Vector2i coutMoneyPos(50, 125);
@@ -57,21 +79,34 @@ sf::Vector2i coutMoneyPos(50, 125);
 	std::vector<sf::Sprite> paralaxSprite(colparalax);
 	std::vector<sf::Sprite> paralaxSprite1(colparalax);
 	std::vector<sf::Sprite> paralaxSprite2(colparalax);
-	int paralaxPos = -400;
+	std::vector<sf::Sprite> paralaxSprite3(colparalax);
+	std::vector<sf::Sprite> paralaxSprite4(colparalax);
+	int paralaxPos = -350;
+	int paralaxDiferent = 20;
 	float paralaxSize = 5;
-	for(int i = 0; i < colparalax;i++){
-		paralaxSprite[i].setTexture(paralaxTexture[i]);
-		paralaxSprite[i].setPosition(1,paralaxPos - (20*(10-i)));
-		paralaxSprite[i].setScale(paralaxSize,paralaxSize);
-		
-		paralaxSprite1[i].setTexture(paralaxTexture[i]);
-		paralaxSprite1[i].setPosition(paralaxSprite[i].getGlobalBounds().width ,paralaxPos - (20*(10-i)));
-		paralaxSprite1[i].setScale(paralaxSize,paralaxSize);
-		
-		paralaxSprite2[i].setTexture(paralaxTexture[i]);
-		paralaxSprite2[i].setPosition(1 - paralaxSprite[i].getGlobalBounds().width ,paralaxPos - (20*(10-i)));
-		paralaxSprite2[i].setScale(paralaxSize,paralaxSize);
-	}
+for(int i = 0; i < colparalax; i++) { 
+    paralaxSprite[i].setTexture(paralaxTexture[i]);
+    paralaxSprite[i].setPosition(-700, paralaxPos - (paralaxDiferent * (10 - i)));
+    paralaxSprite[i].setScale(paralaxSize, paralaxSize);
+
+    float width = paralaxSprite[i].getGlobalBounds().width;
+
+    paralaxSprite1[i].setTexture(paralaxTexture[i]);
+    paralaxSprite1[i].setPosition(paralaxSprite[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (10 - i)));
+    paralaxSprite1[i].setScale(paralaxSize, paralaxSize);
+
+    paralaxSprite2[i].setTexture(paralaxTexture[i]);
+    paralaxSprite2[i].setPosition(paralaxSprite1[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (10 - i)));
+    paralaxSprite2[i].setScale(paralaxSize, paralaxSize);
+
+    paralaxSprite3[i].setTexture(paralaxTexture[i]);
+    paralaxSprite3[i].setPosition(paralaxSprite2[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (10 - i)));
+    paralaxSprite3[i].setScale(paralaxSize, paralaxSize);
+    
+    paralaxSprite4[i].setTexture(paralaxTexture[i]);
+    paralaxSprite4[i].setPosition(paralaxSprite3[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (10 - i)));
+    paralaxSprite4[i].setScale(paralaxSize, paralaxSize);
+}
 	
 
      ///PARALAX
@@ -80,10 +115,7 @@ sf::Vector2i coutMoneyPos(50, 125);
 	int coinH=0,g=0,moni=0,mon=0;
 	float speedup=20 , speeddown = 0 , frameCoinWidht=(191),frameCoinHeight=171;
     Time time = clock.getElapsedTime();
-    ///Шрифт
-    sf::Font font; 
-    font.loadFromFile("ArialRegular.ttf");
-    ///Шрифт
+
     
     ///-----
     
@@ -234,7 +266,12 @@ AIEnemy enemies10(-100 + 4 * 100, -300 + 2 * -145, 150.f);
 int coutEnemy = 0 ; 
 
 Key key(400.f, 300.f, 2.0f);
-            
+Key key2(400.f, 300.f, 2.0f);
+Key key3(400.f, 300.f, 2.0f);
+
+int coutKey = 0;
+
+int haveKey = 0;            
 
 for (int i = 0; i < HEIGHT_MAP; i++) {
     for (int j = 0; j < WIDTH_MAP; j++) {
@@ -315,8 +352,23 @@ switch (coutEnemy) {
 }
         }
     if(TileMap[i][j] == 'k'){
-    	key.setPosition(-80 + j * 100, -300 + (i * 145) + 80);
+    	
+coutKey++;    
+switch (coutKey) {
+	    case 1:
+		key.setPosition(-80 + j * 100, -300 + (i * 145) + 80);
+        break;
+        case 2:
+		key2.setPosition(-80 + j * 100, -300 + (i * 145) + 80);
+        break;
+        case 3:
+		key3.setPosition(-80 + j * 100, -300 + (i * 145) + 80);
+        break;
+        default :
+        	
+        break;	
 	}
+		}
 	}
 }
 ///Растановка тайлов карты из текстового массива  
@@ -489,11 +541,21 @@ if ((Keyboard::isKeyPressed(Keyboard::Right))){
 
 		}
 
- 
- if(AttackPlayer == true){
- 	cout<<"Attack"<<endl;
- 	AttackPlayer = false;
- }
+
+
+
+
+
+
+if (AttackPlayer && attackCooldown == 0 && CoutHeal >= 0) {
+    CoutHeal--;
+    AttackPlayer = false;
+    attackCooldown = 100; 
+}
+
+if (attackCooldown > 0) {
+    attackCooldown--;
+}
 
 	
 int totalFrames = texture[sheet].getSize().x / 50; 
@@ -641,9 +703,11 @@ for (int i = 0; i < colparalax; i++) {
 
     // Перемещение паралакса
     if(moveParalax){
-    paralaxSprite[i].setPosition(paralaxSprite[i].getPosition().x + offset, -400 - (20 * (10 - i)));
-    paralaxSprite1[i].setPosition(paralaxSprite1[i].getPosition().x + offset, -400 - (20 * (10 - i)));
-    paralaxSprite2[i].setPosition(paralaxSprite2[i].getPosition().x + offset, -400 - (20 * (10 - i)));  	
+    paralaxSprite[i].setPosition(paralaxSprite[i].getPosition().x + offset,paralaxSprite[i].getPosition().y);
+    paralaxSprite1[i].setPosition(paralaxSprite1[i].getPosition().x + offset, paralaxSprite[i].getPosition().y);
+    paralaxSprite2[i].setPosition(paralaxSprite2[i].getPosition().x + offset,paralaxSprite[i].getPosition().y);  
+	paralaxSprite3[i].setPosition(paralaxSprite3[i].getPosition().x + offset, paralaxSprite[i].getPosition().y);	
+	paralaxSprite4[i].setPosition(paralaxSprite4[i].getPosition().x + offset, paralaxSprite[i].getPosition().y);	
 	}
 
 
@@ -651,6 +715,7 @@ for (int i = 0; i < colparalax; i++) {
     window.draw(paralaxSprite[i]);
     window.draw(paralaxSprite1[i]);
     window.draw(paralaxSprite2[i]);
+    window.draw(paralaxSprite3[i]);
 }
 
 	
@@ -677,29 +742,33 @@ for (int i = 0; i < colparalax; i++) {
 	//float deltaTime = clock.restart().asSeconds();
 	//std::cout<<deltaTime<< endl;
 	float deltaTime = 0.022f;
-    enemies1.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies1.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies1.render(window); // Отрисовка врага	
-    enemies2.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies2.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies2.render(window);
-    enemies3.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies3.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies3.render(window);
-    enemies4.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies4.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies4.render(window);
-    enemies5.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies5.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies5.render(window);
-    enemies6.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies6.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies6.render(window);
-    enemies7.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies7.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies7.render(window);
-    enemies8.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies8.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies8.render(window);
-    enemies9.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies9.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies9.render(window);
-    enemies10.update(deltaTime, sprite.getPosition(), obstacleSprites,AttackPlayer); // Обновление врага
+    enemies10.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
     enemies10.render(window);
     
-      	key.update(deltaTime,sprite);
+      	key.update(deltaTime,sprite,haveKey);
 		key.render(window);
+		key2.update(deltaTime,sprite,haveKey);
+		key2.render(window);
+		key3.update(deltaTime,sprite,haveKey);
+		key3.render(window);
 ///Отрисовка карты  и ее элементов
 		        for ( sf::Sprite sprite1 : sprite1Coin2) {
 		        		 if (checkSprite(sprite, sprite1) && money[moni]) {
@@ -725,7 +794,7 @@ for (int i = 0; i < colparalax; i++) {
       /////Доработка 
       
       if(sprite.getPosition().y > 1200){//Если игрок падает ниже этой границы , то его телепортирует на точку спавна
-      	sprite.setPosition(SpawnPlayerPosition);
+      	sprite.setPosition(sprite.getPosition().x,SpawnPlayerPosition.y);
 	  }
       
       ////Доработка 
@@ -742,12 +811,26 @@ for (int i = 0; i < colparalax; i++) {
     spriteCoin.setPosition(worldPos.x ,worldPos.y + 50);
 	text.setPosition(worldPos.x + 50 ,worldPos.y + 50);
 
+keyUI.setPosition(worldPos.x + 1 ,worldPos.y + 80);
+keyUItext.setPosition(worldPos.x + 50 ,worldPos.y + 90);
+if(haveKey != 0 ){
+     stringstream ss;
+     ss << haveKey;
+     string str;
+     ss >> str;
+	 keyUItext.setString(str);	
+}
+
+
+window.draw(keyUI);
+window.draw(keyUItext);
 for(int i = 0 ; i < 3; i++ ){
+	
 heal[i].setPosition(worldPos.x + 40 * i,worldPos.y);
 window.draw(heal[i]);	
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)){
-    	heal[i].setColor(sf::Color::Black);
+    if(CoutHeal < 3){
+    	heal[CoutHeal].setColor(sf::Color::Black);
 	}
 
 }

@@ -10,7 +10,7 @@
 class AIEnemy {
 public:
     AIEnemy(float x, float y, float patrolDistance);
-    void update(float deltaTime, const sf::Vector2f& playerPosition, const std::vector<sf::Sprite>& groundSprites, bool& AttackPlayer);
+    void update(float deltaTime, const Sprite& sprite, const std::vector<sf::Sprite>& groundSprites, bool& AttackPlayer);
     void render(sf::RenderWindow& window) const;
 
     void setScale(float x, float y);
@@ -24,21 +24,24 @@ private:
 	    const sf::Sprite& getSprite() const {
         return sprite;
     }
-	
+	void handlePlayerCollision(const sf::FloatRect& playerBounds, bool& AttackEnemy) ;
     void applyGravity(float deltaTime);
     void checkPlayerInRange(const sf::Vector2f& playerPosition);
     void patrol(float deltaTime, const sf::Vector2f& playerPosition);
     void checkGroundCollision(const std::vector<sf::Sprite>& groundSprites);
     void move(float deltaTime);
+   
 
     sf::Vector2f position;
     sf::Vector2f velocity;
     float speed;
     float patrolDistance;
     float zoneRadius;
+    int health = 3;
     bool movingRight;
     bool isPlayerInRange;
     bool onGround;
+    bool isLive  = true ;
     float sizeX , sizeY;
     sf::Clock patrolTimer;
     float gravity = 1.f;       // Ускорение падения
@@ -70,13 +73,17 @@ void AIEnemy::setSpeed(float newSpeed) {
     speed = newSpeed;
 }
 
-void AIEnemy::update(float deltaTime, const sf::Vector2f& playerPosition, const std::vector<sf::Sprite>& groundSprites,bool& AttackPlayer) {
-    applyGravity(deltaTime);
-
-	checkPlayerInRange(playerPosition);
-    patrol(deltaTime, playerPosition);
+void AIEnemy::update(float deltaTime, const Sprite& spritePlayer, const std::vector<sf::Sprite>& groundSprites,bool& AttackPlayer) {
+    //if(isLive){
+    	
+	
+	applyGravity(deltaTime);
+	checkPlayerInRange(spritePlayer.getPosition());
+    patrol(deltaTime, spritePlayer.getPosition());
     checkGroundCollision(groundSprites); // ???????? ??????? ????????
     move(deltaTime);
+    handlePlayerCollision(spritePlayer.getGlobalBounds(), AttackPlayer);
+    //checkLive();
 
     // Определяем, какую анимацию использовать
     if (std::abs(velocity.x) > 0.1f || std::abs(velocity.x) < -0.1f) {
@@ -86,6 +93,7 @@ void AIEnemy::update(float deltaTime, const sf::Vector2f& playerPosition, const 
         // Если враг стоит, используем анимацию ожидания
         idleAnimation.updateAnimation(sprite);
     }
+
 }
 
 
@@ -199,6 +207,38 @@ void AIEnemy::move(float deltaTime) {
         sprite.setScale(-sizeX, sizeY); // Спрайт смотрит влево
     }
 }
+
+
+void AIEnemy::handlePlayerCollision(const sf::FloatRect& playerBounds, bool& AttackEnemy) {
+    sf::FloatRect enemyBounds = sprite.getGlobalBounds();
+
+    if (enemyBounds.intersects(playerBounds)) {
+        float playerBottom = playerBounds.top + playerBounds.height;
+        float enemyBottom = enemyBounds.top + enemyBounds.height;
+
+        if (playerBounds.left  + playerBounds.width > enemyBounds.left &&
+            playerBounds.left < enemyBounds.left + enemyBounds.width) {
+            if (playerBottom <= enemyBounds.top + 5.f) {  
+
+//                velocity.y = -200.f; 
+//                movingRight = !movingRight; 
+//                
+//
+//                sprite.setColor(sf::Color::White);
+//                sf::sleep(sf::milliseconds(50));
+//                sprite.setColor(sf::Color::Red);
+//                sf::sleep(sf::milliseconds(50));
+//                sprite.setColor(sf::Color::White);
+//                
+//                health -= 1;  
+            } else {  
+
+                AttackEnemy = true;
+            }
+        }
+    }
+}
+
 
 
 sf::Vector2f AIEnemy::getPosition() const {
