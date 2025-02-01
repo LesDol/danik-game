@@ -36,15 +36,15 @@ int main()
      keyUItext.setOutlineColor(sf::Color::Black);
      keyUItext.setFillColor(sf::Color::White);
      keyUItext.setString("0");
-     
-     Sprite heal[3];
+     int healnum = 20;
+     Sprite heal[healnum];
      Texture healTexture;
      healTexture.loadFromFile("animation/heal.png");
-     for(int i = 0 ; i < 3; i++ ){
+     for(int i = 0 ; i < healnum; i++ ){
      heal[i].setTexture(healTexture);
      heal[i].setScale(0.03,0.03);
 	 }
-	int CoutHeal = 3;
+	int CoutHeal = healnum;
 	int attackCooldown = 0; 
 	
 	//UI
@@ -198,6 +198,8 @@ rectangleX.setColor(Color(0,0,255));
     sprite.setPosition(1,-50);
     sprite.setScale(2.0f,2.0f);
     bool AttackPlayer = false;
+    bool AttackEnemy = false;
+
 //Создание спрайта игрока
 
  
@@ -406,6 +408,10 @@ spriteCoin.setTextureRect(sf::IntRect((frameCoinWidht*coinH),(0),frameCoinWidht,
 
     while (window.isOpen())
     {
+    	float deltaTime = 0.022f;
+    	
+    	
+    	
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -547,15 +553,6 @@ if ((Keyboard::isKeyPressed(Keyboard::Right))){
 
 
 
-if (AttackPlayer && attackCooldown == 0 && CoutHeal >= 0) {
-    CoutHeal--;
-    AttackPlayer = false;
-    attackCooldown = 100; 
-}
-
-if (attackCooldown > 0) {
-    attackCooldown--;
-}
 
 	
 int totalFrames = texture[sheet].getSize().x / 50; 
@@ -613,38 +610,57 @@ if (checkSpriteOverlap(rectangleX, spriteZone)){
 
 /// Плавное следдование камеры за игроком , с ускорением , чем дальше камера от игрока тем быстрее она движется
 		
-		if (x < sprite.getPosition().x){
-			x+=2;
-		}
-		if (x > sprite.getPosition().x){
-			x-=2;
-		}
-		if (x + 30 > sprite.getPosition().x){
-			x-=3;
-			if (x + 60 > sprite.getPosition().x){
-			x-=2;
-		}
-		}
-				
-		if (x - 30 < sprite.getPosition().x){
-			x+=3;
-			if (x - 60 < sprite.getPosition().x){
-			x+=2;
-		}
-		}
 
-		if (y < sprite.getPosition().y){
-			y+=2;
-		}
-		if (y > sprite.getPosition().y){
-			y-=2;
-		}
-		if (y + 30 > sprite.getPosition().y){
-			y-=3;
-		}
-		if (y - 30 < sprite.getPosition().y){
-			y+=3;
-		}
+		
+if (AttackPlayer  == true  && CoutHeal == 0 ) {
+	AttackPlayer = false;
+}		
+	folowCamera(x,y,sprite);
+if ((attackCooldown/50 )> 0) {
+		shakeCamera(10,x,y);
+	 if(moveL){
+	 	sprite.move(10,0);
+	 }
+	 if(moveR){
+	 	sprite.move(-10,0);
+	 }
+	}
+	
+	if(!up){
+		if (AttackPlayer == true && attackCooldown == 0 && CoutHeal >= 0) {
+    CoutHeal--;
+    AttackPlayer = false;
+    attackCooldown = 60; 
+}
+
+if (attackCooldown > 0) {
+	AttackPlayer = false;
+    attackCooldown--;
+}
+	
+}
+if(AttackEnemy){
+	if (upR){
+	j=0;
+	up = true;
+	speedup=36;
+	sheet = 4;
+	getAspectRatio(texture[sheet],frame);
+	sprite.setTexture(texture[sheet]);
+	}
+if (upL){
+	j=0;
+	up = true;
+	speedup=36;
+	sheet = 5;
+	getAspectRatio(texture[sheet],frame);
+	sprite.setTexture(texture[sheet]);
+	}	
+	AttackEnemy = false;	
+}
+
+		
+		
 	/// Плавное следдование камеры за игроком , с ускорением , чем дальше камера от игрока тем быстрее она движется	
 		
 	/// -------
@@ -660,7 +676,7 @@ coinH = 0;
         clock.restart();
         }
     sf::Vector2f playerPosition(x, y);
-    getplayercoordinateforview(x,y) ;
+    getplayercoordinateforview(AttackPlayer,x,y) ;
 
 	
 	
@@ -741,26 +757,26 @@ for (int i = 0; i < colparalax; i++) {
 
 	//float deltaTime = clock.restart().asSeconds();
 	//std::cout<<deltaTime<< endl;
-	float deltaTime = 0.022f;
-    enemies1.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+	
+    enemies1.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies1.render(window); // Отрисовка врага	
-    enemies2.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+    enemies2.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies2.render(window);
-    enemies3.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+    enemies3.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies3.render(window);
-    enemies4.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+    enemies4.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies4.render(window);
-    enemies5.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+    enemies5.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies5.render(window);
-    enemies6.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+    enemies6.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies6.render(window);
-    enemies7.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+    enemies7.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies7.render(window);
-    enemies8.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+    enemies8.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies8.render(window);
-    enemies9.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+    enemies9.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies9.render(window);
-    enemies10.update(deltaTime, sprite, obstacleSprites,AttackPlayer); // Обновление врага
+    enemies10.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
     enemies10.render(window);
     
       	key.update(deltaTime,sprite,haveKey);
@@ -824,12 +840,12 @@ if(haveKey != 0 ){
 
 window.draw(keyUI);
 window.draw(keyUItext);
-for(int i = 0 ; i < 3; i++ ){
+for(int i = 0 ; i < healnum; i++ ){
 	
 heal[i].setPosition(worldPos.x + 40 * i,worldPos.y);
 window.draw(heal[i]);	
 
-    if(CoutHeal < 3){
+    if(CoutHeal < healnum){
     	heal[CoutHeal].setColor(sf::Color::Black);
 	}
 
