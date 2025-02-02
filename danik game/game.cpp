@@ -12,17 +12,85 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1200, 720), "SFML Keyboard Input");
     window.setFramerateLimit(45);
     setlocale(LC_ALL, "Russian");
+	
     sf::Clock clock;
      
-     std::srand(static_cast<unsigned>(std::time(nullptr)));
-     
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+    
      //UI
      
          ///Шрифт
     sf::Font font; 
     font.loadFromFile("ArialRegular.ttf");
-    int coolDown;
+    bool MainMenu = true;
+    
+	start_game:
+		
+		if(MainMenu){
+			 std::vector<sf::Texture> textures(4);
+    std::vector<sf::Texture*> texturePtrs(4);
+    std::vector<float> speeds = {25.0f, 37.0f, 50.0f, 75.0f};
+
+    for (size_t i = 0; i < 4; ++i) {
+        if (!textures[i].loadFromFile("Paralax/Clouds/Clouds 2/" + std::to_string(i + 1) + ".png")) {
+            return -1;
+        }
+        texturePtrs[i] = &textures[i];
+    }
+
+    // Инициализация параллакса и меню
+    MainParallax parallax(texturePtrs, speeds);
+    Menu menu(window, font);
+    
+
+    view.setSize(1200, 720);  
+    view.setCenter(600, 360);
+
+    sf::Clock clock;
+    while (window.isOpen()) {
+        sf::Event event;
+        bool mousePressed = false;
+
+        // Обработка событий
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                mousePressed = true;
+            }
+        }
+
+        // Обновление параллакса и меню с учётом камеры
+        float deltaTime = clock.restart().asSeconds();
+        parallax.update(deltaTime);
+        menu.update(window, view);
+
+        // Проверка, была ли нажата кнопка "СТАРТ"
+        if (menu.isGameStarted()) {
+		MainMenu = false;
+			break;
+			
+        }
+
+        // Отображение
+        window.clear();
+        window.setView(view);  // Применяем камеру
+        parallax.draw(window);
+        menu.draw();
+        window.display();
+    }
+    
+			
+		}
+    
+    //MainMenu(font,window);
+    
+    
+    int coolDown = 0;
     ///Шрифт
+    
+    
      
      Sprite keyUI;
      Texture keyUITexture;
@@ -36,7 +104,7 @@ int main()
      keyUItext.setOutlineColor(sf::Color::Black);
      keyUItext.setFillColor(sf::Color::White);
      keyUItext.setString("0");
-     int healnum = 20;
+     int healnum = 6;
      Sprite heal[healnum];
      Texture healTexture;
      healTexture.loadFromFile("animation/heal.png");
@@ -616,7 +684,7 @@ if (AttackPlayer  == true  && CoutHeal == 0 ) {
 	AttackPlayer = false;
 }		
 	folowCamera(x,y,sprite);
-if ((attackCooldown/50 )> 0) {
+if (coolDown > 0) {
 		shakeCamera(10,x,y);
 	 if(moveL){
 	 	sprite.move(10,0);
@@ -631,11 +699,13 @@ if ((attackCooldown/50 )> 0) {
     CoutHeal--;
     AttackPlayer = false;
     attackCooldown = 60; 
+    coolDown = 10;
 }
 
 if (attackCooldown > 0) {
 	AttackPlayer = false;
     attackCooldown--;
+    coolDown --;
 }
 	
 }
@@ -850,7 +920,10 @@ window.draw(heal[i]);
 	}
 
 }
-
+if(CoutHeal == 0){
+	MainMenu = true;
+	goto start_game;
+}
         window.display();
     }
 

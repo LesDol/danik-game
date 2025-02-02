@@ -1,83 +1,139 @@
 #include <SFML/Graphics.hpp>
-#include "AIEnemy.h"
+#include <iostream>
+#include <functional>
+#include "Library/UI.h"
+using namespace std;
+using namespace sf;
 
-int main() {
-    // Создание окна
-    sf::RenderWindow window(sf::VideoMode(800, 600), "AI Enemy Example");
-    window.setFramerateLimit(60);
+class Button
+{
+public:
+    Button(sf::Vector2f position, float width, float height, sf::Color idleColor, sf::Color hoverColor, sf::Color pressedColor, std::string buttonText, sf::Font& font)
+        : m_position(position), m_idleColor(idleColor), m_hoverColor(hoverColor), m_pressedColor(pressedColor)
+    {
+        m_shape.setPosition(position);
+        m_shape.setSize(sf::Vector2f(width, height));
+        m_shape.setFillColor(m_idleColor);
 
-    // Часы для расчета времени кадра
-    sf::Clock clock;
+        m_text.setFont(font);
+        m_text.setString(buttonText);
+        m_text.setCharacterSize(20);
+        m_text.setFillColor(sf::Color::Black);
 
-    // Платформа для врага и игрока
-    sf::RectangleShape ground(sf::Vector2f(800.f, 50.f));
-    ground.setFillColor(sf::Color::Green);
-    ground.setPosition(0.f, 550.f);
+        sf::FloatRect textBounds = m_text.getLocalBounds();
+        m_text.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
+        m_text.setPosition(position.x + width / 2.0f, position.y + height / 2.0f);
+    }
 
-    // Создание врага
-    AIEnemy enemy(200.f, 500.f, 150.f);
+    void setOnClick(const std::function<void()>& onClick) {
+        m_onClick = onClick;
+    }
 
-    // Создание игрока
-    sf::RectangleShape player(sf::Vector2f(50.f, 50.f));
-    player.setFillColor(sf::Color::Blue);
-    player.setPosition(100.f, 500.f);
-    enemy.setScale(2, 2);
+    void update(sf::RenderWindow& window)
+    {
+        sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
+        bool isMouseOver = m_shape.getGlobalBounds().contains(mousePos);
 
-    // Скорость игрока
-    const float playerSpeed = 200.f;
+        if (isMouseOver)
+        {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                m_shape.setFillColor(m_pressedColor);
+                m_shape.setOutlineColor(m_hoverColor);
 
-    // Гравитация
-    float velocityY = 0.f;
-    const float gravity = 500.f;
-    const float jumpForce = -300.f;
-    bool onGround = true;
-
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
+                if (m_onClick) {
+                    m_onClick();
+                }
+            }
+            else
+            {
+                m_shape.setFillColor(m_hoverColor);
+                m_shape.setOutlineColor(m_hoverColor);
             }
         }
-
-        // Расчет времени кадра
-        float deltaTime = clock.restart().asSeconds();
-
-        // Управление игроком
-        sf::Vector2f movement(0.f, 0.f);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            movement.x -= playerSpeed * deltaTime;
+        else
+        {
+            m_shape.setFillColor(Color(191, 202, 202, 185));
+            m_shape.setOutlineColor(Color(191, 202, 202, 185));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            movement.x += playerSpeed * deltaTime;
+    }
+
+    void draw(sf::RenderWindow& window)
+    {
+        window.draw(m_shape);
+        window.draw(m_text);
+    }
+
+    void setSize(float width, float height)
+    {
+        m_shape.setSize(sf::Vector2f(width, height));
+        // Recenter text
+        sf::FloatRect textBounds = m_text.getLocalBounds();
+        m_text.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
+        m_text.setPosition(m_position.x + width / 2.0f, m_position.y + height / 2.0f);
+    }
+
+public:
+    std::function<void()> m_onClick;
+    sf::RectangleShape m_shape;
+    sf::Text m_text;
+    sf::Vector2f m_position;
+    sf::Color m_idleColor;
+    sf::Color m_hoverColor;
+    sf::Color m_pressedColor;
+};
+
+int main()
+{
+    // Создание окна
+    RenderWindow window(VideoMode(800, 600), "Меню");
+
+    // Шрифт для кнопок
+    Font font;
+    if (!font.loadFromFile("ArialRegular.ttf")) {
+        cout << "Ошибка загрузки шрифта!" << endl;
+        return -1;
+    }
+
+    // Создание кнопок
+    Button startButton(Vector2f(300, 150), 200, 50, Color::Green, Color::Yellow, Color::Red, "СТАРТ", font);
+    Button aboutButton(Vector2f(300, 250), 200, 50, Color::Green, Color::Yellow, Color::Red, "ОБ ИГРЕ", font);
+    Button exitButton(Vector2f(300, 350), 200, 50, Color::Green, Color::Yellow, Color::Red, "ВЫХОД", font);
+
+    // Обработчики событий кнопок
+    startButton.setOnClick([&]() {
+        cout << "Игра началась!" << endl;
+    });
+
+    aboutButton.setOnClick([&]() {
+        cout << "Это простая игра на SFML." << endl;
+    });
+
+    exitButton.setOnClick([&]() {
+        window.close();
+    });
+
+    // Основной цикл игры
+    while (window.isOpen())
+    {
+        // Обработка событий
+        Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+                window.close();
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && onGround) {
-            velocityY = jumpForce;
-            onGround = false;
-        }
 
-        // Применение гравитации
-        velocityY += gravity * deltaTime;
-        movement.y += velocityY * deltaTime;
+        // Обновление состояния кнопок
+        startButton.update(window);
+        aboutButton.update(window);
+        exitButton.update(window);
 
-        // Перемещение игрока
-        player.move(movement);
-
-        // Проверка на землю
-        if (player.getGlobalBounds().intersects(ground.getGlobalBounds())) {
-            player.setPosition(player.getPosition().x, ground.getPosition().y - player.getSize().y);
-            velocityY = 0.f;
-            onGround = true;
-        }
-
-        // Обновление врага
-        enemy.update(deltaTime, player.getPosition(), ground.getGlobalBounds());
-
-        // Рендеринг
+        // Отрисовка
         window.clear();
-        window.draw(ground);
-        window.draw(player);
-        enemy.render(window); // Отрисовка врага
+        startButton.draw(window);
+        aboutButton.draw(window);
+        exitButton.draw(window);
         window.display();
     }
 

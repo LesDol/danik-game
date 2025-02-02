@@ -14,6 +14,7 @@
 #include "Library/Zone.h"
 #include "Library/AIenemy.h"
 #include "Library/GameObject.h"
+#include "Library/UI.h"
 
 using namespace std;
 using namespace sf; 
