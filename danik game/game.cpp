@@ -9,6 +9,8 @@ using namespace sf;
 int main()
 {
 	
+	
+	
     sf::RenderWindow window(sf::VideoMode(1200, 720), "SFML Keyboard Input");
     window.setFramerateLimit(45);
     setlocale(LC_ALL, "Russian");
@@ -16,6 +18,7 @@ int main()
     sf::Clock clock;
      
     std::srand(static_cast<unsigned>(std::time(nullptr)));
+
     
      //UI
      
@@ -125,7 +128,7 @@ sf::Vector2i coutMoneyPos(50, 125);
      
      
      ///PARALAX
-    int colparalax = 6;
+    int colparalax = 8;
     bool moveParalax =  true;
      
     std::vector<sf::Texture> paralaxTexture(colparalax);
@@ -138,6 +141,7 @@ sf::Vector2i coutMoneyPos(50, 125);
     paralaxTexture[3].loadFromFile("Paralax/Free Pixel Art Hill/PNG/Hills Layer 04.png");
     paralaxTexture[4].loadFromFile("Paralax/Free Pixel Art Hill/PNG/Hills Layer 05.png");
     paralaxTexture[5].loadFromFile("Paralax/Free Pixel Art Hill/PNG/Hills Layer 06.png");
+    
     
 
     
@@ -152,29 +156,86 @@ sf::Vector2i coutMoneyPos(50, 125);
 	int paralaxPos = -350;
 	int paralaxDiferent = 20;
 	float paralaxSize = 5;
+
+	
+
+	
 for(int i = 0; i < colparalax; i++) { 
+if(i != 6){
     paralaxSprite[i].setTexture(paralaxTexture[i]);
-    paralaxSprite[i].setPosition(-700, paralaxPos - (paralaxDiferent * (10 - i)));
+    paralaxSprite[i].setPosition(-700, paralaxPos - (paralaxDiferent * (15 - i)));
     paralaxSprite[i].setScale(paralaxSize, paralaxSize);
 
     float width = paralaxSprite[i].getGlobalBounds().width;
 
     paralaxSprite1[i].setTexture(paralaxTexture[i]);
-    paralaxSprite1[i].setPosition(paralaxSprite[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (10 - i)));
+    paralaxSprite1[i].setPosition(paralaxSprite[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (15 - i)));
     paralaxSprite1[i].setScale(paralaxSize, paralaxSize);
 
     paralaxSprite2[i].setTexture(paralaxTexture[i]);
-    paralaxSprite2[i].setPosition(paralaxSprite1[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (10 - i)));
+    paralaxSprite2[i].setPosition(paralaxSprite1[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (15 - i)));
     paralaxSprite2[i].setScale(paralaxSize, paralaxSize);
 
     paralaxSprite3[i].setTexture(paralaxTexture[i]);
-    paralaxSprite3[i].setPosition(paralaxSprite2[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (10 - i)));
+    paralaxSprite3[i].setPosition(paralaxSprite2[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (15 - i)));
     paralaxSprite3[i].setScale(paralaxSize, paralaxSize);
     
     paralaxSprite4[i].setTexture(paralaxTexture[i]);
     paralaxSprite4[i].setPosition(paralaxSprite3[i].getPosition().x + width, paralaxPos - (paralaxDiferent * (10 - i)));
-    paralaxSprite4[i].setScale(paralaxSize, paralaxSize);
+    paralaxSprite4[i].setScale(paralaxSize, paralaxSize);	
+}else if(i == 6){
+	paralaxPos = -350-150;
+	    paralaxSprite[i].setTexture(paralaxTexture[3]);
+    paralaxSprite[i].setPosition(-700, paralaxPos);
+    paralaxSprite[i].setScale(paralaxSize, paralaxSize);
+
+    float width = paralaxSprite[i].getGlobalBounds().width;
+
+    paralaxSprite1[i].setTexture(paralaxTexture[3]);
+    paralaxSprite1[i].setPosition(paralaxSprite[i].getPosition().x + width, paralaxPos);
+    paralaxSprite1[i].setScale(paralaxSize, paralaxSize);
+
+    paralaxSprite2[i].setTexture(paralaxTexture[3]);
+    paralaxSprite2[i].setPosition(paralaxSprite1[i].getPosition().x + width, paralaxPos);
+    paralaxSprite2[i].setScale(paralaxSize, paralaxSize);
+
+    paralaxSprite3[i].setTexture(paralaxTexture[3]);
+    paralaxSprite3[i].setPosition(paralaxSprite2[i].getPosition().x + width, paralaxPos );
+    paralaxSprite3[i].setScale(paralaxSize, paralaxSize);
+    
+    paralaxSprite4[i].setTexture(paralaxTexture[3]);
+    paralaxSprite4[i].setPosition(paralaxSprite3[i].getPosition().x + width, paralaxPos);
+    paralaxSprite4[i].setScale(paralaxSize, paralaxSize);	
 }
+if(i == 7){
+	paralaxPos = -350-50;
+	    paralaxSprite[i].setTexture(paralaxTexture[2]);
+    paralaxSprite[i].setPosition(-700, paralaxPos);
+    paralaxSprite[i].setScale(paralaxSize, paralaxSize);
+
+    float width = paralaxSprite[i].getGlobalBounds().width;
+cout <<paralaxPos <<endl;
+    paralaxSprite1[i].setTexture(paralaxTexture[2]);
+    paralaxSprite1[i].setPosition(paralaxSprite[i].getPosition().x + width, paralaxPos);
+    paralaxSprite1[i].setScale(paralaxSize, paralaxSize);
+
+    paralaxSprite2[i].setTexture(paralaxTexture[2]);
+    paralaxSprite2[i].setPosition(paralaxSprite1[i].getPosition().x + width, paralaxPos);
+    paralaxSprite2[i].setScale(paralaxSize, paralaxSize);
+
+    paralaxSprite3[i].setTexture(paralaxTexture[2]);
+    paralaxSprite3[i].setPosition(paralaxSprite2[i].getPosition().x + width, paralaxPos );
+    paralaxSprite3[i].setScale(paralaxSize, paralaxSize);
+    
+    paralaxSprite4[i].setTexture(paralaxTexture[2]);
+    paralaxSprite4[i].setPosition(paralaxSprite3[i].getPosition().x + width, paralaxPos);
+    paralaxSprite4[i].setScale(paralaxSize, paralaxSize);	
+}
+
+
+}
+bool frontPhone = true;
+
 	
 
      ///PARALAX
@@ -341,8 +402,21 @@ Key key3(400.f, 300.f, 2.0f);
 
 int coutKey = 0;
 
-int haveKey = 0;            
+int haveKey = 0;          
 
+  
+	///Дверь
+	
+	    sf::Texture doorTexture;
+    if (!doorTexture.loadFromFile("GameObjects/door/door.png")) {
+        std::cerr << "Ошибка загрузки текстуры двери!" << std::endl;
+        return -1;
+    }
+    Door door(300, 200, 3, &haveKey, doorTexture, font);
+	///Дверь
+	
+	
+	
 for (int i = 0; i < HEIGHT_MAP; i++) {
     for (int j = 0; j < WIDTH_MAP; j++) {
         if ((TileMap[i][j] == '0')) {
@@ -360,6 +434,9 @@ for (int i = 0; i < HEIGHT_MAP; i++) {
             obstacleSprite.setTextureRect(IntRect(0, 100, 100, 145));
             obstacleSprite.setPosition(-100 + j * 100, -300 + i * 145);
             obstacleSprites.push_back(obstacleSprite);
+        }
+        if ((TileMap[i][j] == 'd')) {
+            door.setPosition(-100 + j * 100, -335 + i * 145);
         }
         if ((TileMap[i][j] == 'g')) {
             sf::Sprite obstacleSprite(obstacleTexture);
@@ -773,7 +850,7 @@ if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 }
 
 // Цикл для обработтки паралакса
-for (int i = 0; i < colparalax; i++) {
+for (int i = 0; i < colparalax-2; i++) {
     float offset = 0.0f;
 
     float speed = (i - 2) / 1.5f;  // Скорость движения паралакса
@@ -804,13 +881,17 @@ for (int i = 0; i < colparalax; i++) {
     window.draw(paralaxSprite3[i]);
 }
 
+
 	
         ///Отрисовка и обработка паралакса
         
-
+	    door.update(sprite.getPosition(),window);
+        door.draw(window);
         window.draw(sprite);
 
 ///Отрисовка карты  и ее элементов
+
+
         for (const sf::Sprite obstacle : obstacleSprites) {
             window.draw(obstacle);
         }
@@ -854,7 +935,17 @@ for (int i = 0; i < colparalax; i++) {
 		key2.update(deltaTime,sprite,haveKey);
 		key2.render(window);
 		key3.update(deltaTime,sprite,haveKey);
-		key3.render(window);
+		key3.render(window); 
+		
+	
+        
+        
+        
+
+        
+        
+        
+        
 ///Отрисовка карты  и ее элементов
 		        for ( sf::Sprite sprite1 : sprite1Coin2) {
 		        		 if (checkSprite(sprite, sprite1) && money[moni]) {
@@ -873,7 +964,18 @@ for (int i = 0; i < colparalax; i++) {
         } 
 		    moni=0; 
             spriteCoin.setTextureRect(sf::IntRect((frameCoinWidht*coinH),(0),frameCoinWidht,frameCoinHeight));
-            window.draw(spriteCoin);
+            window.draw(spriteCoin);        
+			
+	if(frontPhone){
+	window.draw(paralaxSprite[6]);
+    window.draw(paralaxSprite1[6]);
+    window.draw(paralaxSprite2[6]);
+    window.draw(paralaxSprite3[6]);
+    window.draw(paralaxSprite[7]);
+    window.draw(paralaxSprite1[7]);
+    window.draw(paralaxSprite2[7]);
+    window.draw(paralaxSprite3[7]);
+}
 	  window.draw(text);
       window.setView(view);
       
@@ -920,10 +1022,15 @@ window.draw(heal[i]);
 	}
 
 }
-if(CoutHeal == 0){
+if(CoutHeal == 0 or door.levelFinish()){
 	MainMenu = true;
 	goto start_game;
 }
+
+
+       
+
+
         window.display();
     }
 

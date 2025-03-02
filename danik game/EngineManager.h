@@ -15,6 +15,7 @@
 #include "Library/AIenemy.h"
 #include "Library/GameObject.h"
 #include "Library/UI.h"
+#include "Library/Door.h"
 
 using namespace std;
 using namespace sf; 
@@ -106,6 +107,10 @@ void renderGameObjects(sf::RenderWindow& window, sf::View& view,
 }
 
 //Функции
+
+
+
+
 
 //Slime
 

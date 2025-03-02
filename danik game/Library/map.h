@@ -7,8 +7,8 @@ sf::String TileMap[HEIGHT_MAP] = {
 	"s00000000000000000000000000000000000000000000000000000000s",
 	"s      mm      mee     m       m        mmmeeee    iem eks",
 	"s0   0000000   0000   00000   00000   0000000000   000000s",
-	"sp ge     me g  m   g   m   g       g m      mm  g       s",
+	"sp g      me g  m   g   md  g       g m      mm  g       s",
 	"s00000   0000000000   0000000000   00000   00000000   000s",
-	"skmi   g    m e     g      m     g   m   g     mmm  gi  ks",
+	"skmi   g    m e     g  e   m     g   m   g     mmm  gi  ks",
 	"s00000000000000000000000000000000000000000000000000000000s",
 };
