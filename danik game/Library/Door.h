@@ -30,13 +30,15 @@ public:
         
         this->font = font;
         finishText.setFont(this->font);
-        finishText.setCharacterSize(18);
+        finishText.setCharacterSize(24);
+        finishText.setOutlineThickness(2.0f);
         finishText.setFillColor(sf::Color::White);
         finishText.setString("Нажмите Enter, чтобы завершить уровень");
         messageText.setFont(this->font);
-        messageText.setCharacterSize(18);
+        messageText.setCharacterSize(24);
+        messageText.setOutlineThickness(2.0f);
         messageText.setFillColor(sf::Color::White);
-        messageText.setString("Соберите 3 ключа чтобы открыть дверь");
+        messageText.setString("Соберите 3 ключа, чтобы открыть дверь");
     }
     
     void setPosition(float x, float y) {
@@ -59,7 +61,7 @@ public:
                 messageText.setPosition(playerPos.x, playerPos.y - 30);
             } else if (!isOpen && *playerKeys >= requiredKeys) {
                 isOpen = true;
-                doorSprite.setTextureRect(sf::IntRect(SizeX, 0, SizeX, SizeY)); // Меняем кадр на открытую дверь
+                doorSprite.setTextureRect(sf::IntRect(SizeX, 0, SizeX, SizeY)); 
             }
         }
     }

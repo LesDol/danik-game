@@ -22,7 +22,7 @@ int main()
     
      //UI
      
-         ///Шрифт
+
     sf::Font font; 
     font.loadFromFile("ArialRegular.ttf");
     bool MainMenu = true;
@@ -41,21 +41,45 @@ int main()
         texturePtrs[i] = &textures[i];
     }
 
-    // Инициализация параллакса и меню
     MainParallax parallax(texturePtrs, speeds);
     Menu menu(window, font);
     
 
     view.setSize(1200, 720);  
     view.setCenter(600, 360);
+    
+	sf::Font logofont; 
+    logofont.loadFromFile("alagard-12px-unicode.ttf");
+    
+    sf::Texture logoTexture;
+    if (!logoTexture.loadFromFile("animation/logo.png")) {
+        std::cout << "Не получилось загрузить лого!" << std::endl;
+        logoTexture.create(200, 200);
+    }
+    
 
+    sf::Sprite logoSprite;
+    logoSprite.setTexture(logoTexture);
+    
+    sf::Vector2u textureSize = logoTexture.getSize();
+    logoSprite.setOrigin(textureSize.x / 2.0f, textureSize.y / 2.0f);
+    logoSprite.setPosition(800, 120); 
+
+    float scale = 0.4f; 
+    logoSprite.setScale(scale, scale);
+    
     sf::Clock clock;
+    
+    Text logo;
+    logo.setFont(logofont);
+    logo.setString("     The  \nRed CLoaK");
+    logo.setCharacterSize(72);
+    logo.setPosition(600, 25);
     while (window.isOpen()) {
         sf::Event event;
         bool mousePressed = false;
 
-        // Обработка событий
-        while (window.pollEvent(event)) {
+       while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
@@ -64,23 +88,23 @@ int main()
             }
         }
 
-        // Обновление параллакса и меню с учётом камеры
-        float deltaTime = clock.restart().asSeconds();
+      float deltaTime = clock.restart().asSeconds();
         parallax.update(deltaTime);
         menu.update(window, view);
 
-        // Проверка, была ли нажата кнопка "СТАРТ"
         if (menu.isGameStarted()) {
 		MainMenu = false;
 			break;
 			
         }
 
-        // Отображение
+
         window.clear();
-        window.setView(view);  // Применяем камеру
+        window.setView(view);  
         parallax.draw(window);
         menu.draw();
+        //window.draw(logo);
+        window.draw(logoSprite); 
         window.display();
     }
     
@@ -91,7 +115,7 @@ int main()
     
     
     int coolDown = 0;
-    ///Шрифт
+    ///
     
     
      
@@ -120,10 +144,9 @@ int main()
 	
 	//UI
 
-sf::Vector2i screenPos(50, 25); // Позиция элемента на экране
+sf::Vector2i screenPos(50, 25); 
 sf::Vector2i coutMoneyPos(50, 125);
 
-// Конвертируем экранные координаты в мировые
 
      
      
@@ -248,14 +271,14 @@ bool frontPhone = true;
     
     ///-----
     
-    ///Текстура монеток
+    ///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		Texture textureCoin;
         textureCoin.loadFromFile("animation/Daco.png");
-    ///Текстура монеток
+    ///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     
     ///-----
     
-    ///Теккст для подсчета монеток
+    ///пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         Text text;
         text.setFont(font);
         text.setCharacterSize(25);
@@ -263,7 +286,7 @@ bool frontPhone = true;
         text.setOutlineColor(sf::Color::Black);
         text.setFillColor(sf::Color::White);
         text.setString("0");
-    ///Теккст для подсчета монеток
+    ///пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     
     ///-----
         
@@ -274,9 +297,9 @@ for(int i = 0; i < 20; i++){
 }  
 ///-----
 
-///Создание переменных для логики игрока  
+///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ  
 
-sf::Vector2f SpawnPlayerPosition;//переменная для запоминания спавна игрока
+sf::Vector2f SpawnPlayerPosition;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
 int j=0,anim=6,upper=0;
 float frame;
@@ -297,7 +320,7 @@ Sprite rectangleX;
 rectangleX.setColor(Color(0,0,255));
 
 
-//Массив на именами анимаций
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     string file[anim];
     file[0] = "stop_right.png";
     file[1] = "stop_left.png";
@@ -305,11 +328,11 @@ rectangleX.setColor(Color(0,0,255));
     file[3] = "run_left.png";
     file[4] = "up_right.png";
     file[5] = "up_left.png";
-//Массив на именами анимаций
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 //----------------
 
-//Загрузка текстур с анимациями персонажа
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     int sheet = 0 ;
 	Texture texture[anim];
     for(int i=0;i<=anim-1;i++){
@@ -317,11 +340,11 @@ rectangleX.setColor(Color(0,0,255));
     getAspectRatio(texture[sheet],frame);
 
 }
-//Загрузка текстур с анимациями персонажа
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 
 
-//Создание спрайта игрока 
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 
     Sprite sprite;
     sprite.setTexture(texture[sheet]);
     sprite.setPosition(1,-50);
@@ -329,23 +352,23 @@ rectangleX.setColor(Color(0,0,255));
     bool AttackPlayer = false;
     bool AttackEnemy = false;
 
-//Создание спрайта игрока
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
  
  
-///Создание переменных для логики игрока  
+///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ  
 	
 ///-----
 
 Image map_image;
 
-	map_image.loadFromFile("animation/tile.png");///Загрузка тайлсета карты
-	Texture obstacleTexture;///создание текстуры тайлсета карты
-	obstacleTexture.loadFromImage(map_image);///загрузка тайлсета карты	в спрайты
+	map_image.loadFromFile("animation/tile.png");///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+	Texture obstacleTexture;///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+	obstacleTexture.loadFromImage(map_image);///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ	пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	
 ////------	
 
-//// Области для проверки коллзии игрока
+//// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	rectangley.setTexture(obstacleTexture);
 	rectangley.setTextureRect(IntRect(0, 100, 20, 20));
 	rectangley2.setTexture(obstacleTexture);
@@ -354,34 +377,34 @@ Image map_image;
 	rectangleX.setTextureRect(IntRect(0, 100,50, 50));
 	rectangleFall.setTexture(obstacleTexture);
 	rectangleFall.setTextureRect(IntRect(0, 100, 100, 100));
-//// Области для проверки коллзии игрока
+//// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
 ////------
 	
 ////------	
 
 
-    std::vector<sf::Sprite> obstacleSprites;// Хранилище для тайлов карты
+    std::vector<sf::Sprite> obstacleSprites;// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 
 ////------ 
-	int maxZone = 3;// Переменная для хранения максимального числа возможных зон
-// Передаём ресурсы в объекты
+	int maxZone = 3;// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 InteractionZone* interactionZones = new InteractionZone[3]{
     InteractionZone(&window, {100.0f, 100.0f}, {400.0f, 150.0f}),
     InteractionZone(&window, {300.0f, 100.0f}, {400.0f, 150.0f}),
     InteractionZone(&window, {500.0f, 100.0f}, {400.0f, 150.0f})
 };
-    int countZones = 0;// переменная для хранения количества раставленных на карте зон , больше 3 нельзя 
+    int countZones = 0;// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ , пїЅпїЅпїЅпїЅпїЅпїЅ 3 пїЅпїЅпїЅпїЅпїЅпїЅ 
     
-std::vector<sf::Sprite> spriteZone(maxZone);//Создаем двери
+std::vector<sf::Sprite> spriteZone(maxZone);//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 
 for (int i = 0; i < maxZone; ++i) {
-    spriteZone[i] = interactionZones[i].getZoneSprite(); // Копирую спрайт "Двери" объекта, так как я не смог реализовать коллизию двери 
+    spriteZone[i] = interactionZones[i].getZoneSprite(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅ" пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ 
 }
            
 
-///Растановка тайлов карты из текстового массива  
-    //std::vector<AIEnemy> enemies; // Хранение врагов
+///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ  
+    //std::vector<AIEnemy> enemies; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
 AIEnemy enemies1(-100 + 4 * 100, -300 + 2 * -145, 150.f);
 AIEnemy enemies2(-100 + 4 * 100, -300 + 2 * -145, 150.f);
@@ -405,15 +428,15 @@ int coutKey = 0;
 int haveKey = 0;          
 
   
-	///Дверь
+	///пїЅпїЅпїЅпїЅпїЅ
 	
 	    sf::Texture doorTexture;
     if (!doorTexture.loadFromFile("GameObjects/door/door.png")) {
-        std::cerr << "Ошибка загрузки текстуры двери!" << std::endl;
+        std::cerr << "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!" << std::endl;
         return -1;
     }
     Door door(300, 200, 3, &haveKey, doorTexture, font);
-	///Дверь
+	///пїЅпїЅпїЅпїЅпїЅ
 	
 	
 	
@@ -444,12 +467,12 @@ for (int i = 0; i < HEIGHT_MAP; i++) {
             obstacleSprite.setPosition(-100 + j * 100, -300 + (i * 145) - 10);
             obstacleSprites.push_back(obstacleSprite);
         }
-        if (TileMap[i][j] == 'i') { // Создание триггерной зоны
+        if (TileMap[i][j] == 'i') { // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
             interactionZones[countZones].setPosition(
                 {static_cast<float>(-100 + j * 100), static_cast<float>(-300 + i * 145)});
             countZones++;
         }
-        if (TileMap[i][j] == 'e') { // Создание врага    
+        if (TileMap[i][j] == 'e') { // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ    
 		coutEnemy++;    
 switch (coutEnemy) {
     case 1:
@@ -518,11 +541,11 @@ switch (coutKey) {
 		}
 	}
 }
-///Растановка тайлов карты из текстового массива  
+///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ  
     
 ////------
 
-std::vector<sf::Sprite> sprite1Coin2;// Хранилище для спрайтов монет
+std::vector<sf::Sprite> sprite1Coin2;// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 for (int i = 0; i < HEIGHT_MAP; i++) {
     for (int j = 0; j < WIDTH_MAP; j++) {
         if (TileMap[i][j] == 'm') {
@@ -534,13 +557,13 @@ for (int i = 0; i < HEIGHT_MAP; i++) {
         }
     }
 }
-//Создание страйта монетки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 Sprite spriteCoin;
 spriteCoin.setScale(0.15,0.15);
 spriteCoin.setTexture(textureCoin);
 spriteCoin.setPosition(1,-50);
 spriteCoin.setTextureRect(sf::IntRect((frameCoinWidht*coinH),(0),frameCoinWidht,frameCoinHeight));
-//Создание страйта монетки
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 //----------------
 
@@ -665,7 +688,7 @@ if ((Keyboard::isKeyPressed(Keyboard::Right))){
  /// -------  
  
  
- /// ВСЕ ЧТО ЗВЯЗАНО С КОЛЛИЗИЕЙ ////		
+ /// пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ////		
 
     		
        		
@@ -707,40 +730,40 @@ j = (j + 1) % totalFrames;
      j  = 11;
 	 }
    
-       	sprite.setTextureRect(sf::IntRect(50*j,0,50,50)); // Запуск анимации текстуры персонажа j меняет кадр 
+       	sprite.setTextureRect(sf::IntRect(50*j,0,50,50)); // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ j пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 
        	
 	if (checkSpriteOverlap(rectangley2, obstacleSprites) ){
 	sprite.move(0,speedPlaer);
         }
  
  
- ///   Проверка колизии по оси X    
+ ///   пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ X    
 if (checkSpriteOverlap(rectangleX, obstacleSprites)){
-	moveParalax = false ; /// запрет на движение паралакса	
-	if (moveR){ ///Если персонаж движется в право , то его отталкивает в лево
+	moveParalax = false ; /// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ	
+	if (moveR){ ///пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ , пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
 	sprite.move(-speedPlaer,0);	
 	}
-	if (moveL){///Если персонаж движется в лево , то его отталкивает в право
+	if (moveL){///пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ , пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
 	sprite.move(speedPlaer,0);	
 	}
   }else{
-moveParalax = true ;/// разрешение на движение паралакса	
+moveParalax = true ;/// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ	
 } 
 
 
 for (int i = 0; i < maxZone; ++i) {
     spriteZone[i].setPosition(interactionZones[i].getZoneSprite().getPosition());  
-	// Короче , это кастыль который передает значение позиции двери заранее скопированному спрайту этой же двери. 
-	//Почему то , когда таких объектов несколько , то тогда класс не может нормально передать значение спрайта двери, что делает невозможным ее коллизию 
+	// пїЅпїЅпїЅпїЅпїЅпїЅ , пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. 
+	//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ , пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ , пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 
 }
 
 
 if (checkSpriteOverlap(rectangleX, spriteZone)){
-	moveParalax = false ; /// запрет на движение паралакса	
-	if (moveR){ ///Если персонаж движется в право , то его отталкивает в лево
+	moveParalax = false ; /// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ	
+	if (moveR){ ///пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ , пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
 	sprite.move(-speedPlaer,0);	
 	}
-	if (moveL){///Если персонаж движется в лево , то его отталкивает в право
+	if (moveL){///пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ , пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
 	sprite.move(speedPlaer,0);	
 	}
   }else{
@@ -749,11 +772,11 @@ if (checkSpriteOverlap(rectangleX, spriteZone)){
 //	
 //}
 	
-/// ВСЕ ЧТО ЗВЯЗАНО С КОЛЛИЗИЕЙ ////		
+/// пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ////		
 
 /// -------
 
-/// Плавное следдование камеры за игроком , с ускорением , чем дальше камера от игрока тем быстрее она движется
+/// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ , пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ , пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		
 
 		
@@ -808,7 +831,7 @@ if (upL){
 
 		
 		
-	/// Плавное следдование камеры за игроком , с ускорением , чем дальше камера от игрока тем быстрее она движется	
+	/// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ , пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ , пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ	
 		
 	/// -------
 	
@@ -829,42 +852,42 @@ coinH = 0;
 	
 ///---------------------------------------------------	
 		
-///Отрисовка всей игры
+///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 
 ///---------------------------------------------------	
 
         window.clear(Color(255,255,255));
         
-        ///Отрисовка и обработка паралакса
+        ///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
-// Переменная для направления движения слоев паралакса
-int moveDirection = 0;  // 0 - на месте, -1 - лево, 1 - право
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+int moveDirection = 0;  // 0 - пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, -1 - пїЅпїЅпїЅпїЅ, 1 - пїЅпїЅпїЅпїЅпїЅ
 
-// Проверка направления движения игрока по клавишам
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-    moveDirection = -1;  // движение в лево
+    moveDirection = -1;  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-    moveDirection = 1;  // движение в право
+    moveDirection = 1;  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ
 } else {
-    moveDirection = 0;  // Нет движения
+    moveDirection = 0;  // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 }
 
-// Цикл для обработтки паралакса
+// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 for (int i = 0; i < colparalax-2; i++) {
     float offset = 0.0f;
 
-    float speed = (i - 2) / 1.5f;  // Скорость движения паралакса
+    float speed = (i - 2) / 1.5f;  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
-    // Проверка есть ли движение персонажа , и в какую сторону он движется
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ , пїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     if (moveDirection == -1) {
-        offset = speed;  // Направление движения паралакса
+        offset = speed;  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     }
-    // Проверка есть ли движение персонажа , и в какую сторону он движется
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ , пїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     else if (moveDirection == 1) {
-        offset = -speed;  // Направление движения паралакса
+        offset = -speed;  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     }
 
-    // Перемещение паралакса
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     if(moveParalax){
     paralaxSprite[i].setPosition(paralaxSprite[i].getPosition().x + offset,paralaxSprite[i].getPosition().y);
     paralaxSprite1[i].setPosition(paralaxSprite1[i].getPosition().x + offset, paralaxSprite[i].getPosition().y);
@@ -874,7 +897,7 @@ for (int i = 0; i < colparalax-2; i++) {
 	}
 
 
-    // Отрисовка паралакса
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     window.draw(paralaxSprite[i]);
     window.draw(paralaxSprite1[i]);
     window.draw(paralaxSprite2[i]);
@@ -883,13 +906,13 @@ for (int i = 0; i < colparalax-2; i++) {
 
 
 	
-        ///Отрисовка и обработка паралакса
+        ///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         
 	    door.update(sprite.getPosition(),window);
         door.draw(window);
         window.draw(sprite);
 
-///Отрисовка карты  и ее элементов
+///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ  пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 
         for (const sf::Sprite obstacle : obstacleSprites) {
@@ -898,7 +921,7 @@ for (int i = 0; i < colparalax-2; i++) {
 
         for (int i = 0; i < maxZone; ++i) {
             interactionZones[i].update(sprite);
-            interactionZones[i].render();  // Отображаем все зоны
+            interactionZones[i].render();  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         }
 
         	        
@@ -909,25 +932,25 @@ for (int i = 0; i < colparalax-2; i++) {
 	//float deltaTime = clock.restart().asSeconds();
 	//std::cout<<deltaTime<< endl;
 	
-    enemies1.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
-    enemies1.render(window); // Отрисовка врага	
-    enemies2.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
+    enemies1.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+    enemies1.render(window); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ	
+    enemies2.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     enemies2.render(window);
-    enemies3.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
+    enemies3.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     enemies3.render(window);
-    enemies4.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
+    enemies4.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     enemies4.render(window);
-    enemies5.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
+    enemies5.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     enemies5.render(window);
-    enemies6.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
+    enemies6.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     enemies6.render(window);
-    enemies7.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
+    enemies7.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     enemies7.render(window);
-    enemies8.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
+    enemies8.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     enemies8.render(window);
-    enemies9.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
+    enemies9.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     enemies9.render(window);
-    enemies10.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // Обновление врага
+    enemies10.update(deltaTime, sprite, obstacleSprites,AttackPlayer,AttackEnemy); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     enemies10.render(window);
     
       	key.update(deltaTime,sprite,haveKey);
@@ -946,7 +969,7 @@ for (int i = 0; i < colparalax-2; i++) {
         
         
         
-///Отрисовка карты  и ее элементов
+///пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ  пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		        for ( sf::Sprite sprite1 : sprite1Coin2) {
 		        		 if (checkSprite(sprite, sprite1) && money[moni]) {
      money[moni]=false;
@@ -979,13 +1002,13 @@ for (int i = 0; i < colparalax-2; i++) {
 	  window.draw(text);
       window.setView(view);
       
-      /////Доработка 
+      /////пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 
       
-      if(sprite.getPosition().y > 1200){//Если игрок падает ниже этой границы , то его телепортирует на точку спавна
+      if(sprite.getPosition().y > 1200){//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ , пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
       	sprite.setPosition(sprite.getPosition().x,SpawnPlayerPosition.y);
 	  }
       
-      ////Доработка 
+      ////пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 
       
       
       
@@ -993,7 +1016,7 @@ for (int i = 0; i < colparalax-2; i++) {
       sf::Vector2f worldPos = window.mapPixelToCoords(screenPos, view);
       
 
-// Отображаем элемент в мировых координатах
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 
     spriteCoin.setPosition(worldPos.x ,worldPos.y + 50);

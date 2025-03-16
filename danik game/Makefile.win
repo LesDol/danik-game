@@ -1,15 +1,15 @@
-# Project: Project1
+# Project: LevelEditor
 # Makefile created by Dev-C++ 5.11
 
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = game.o
-LINKOBJ  = game.o
-LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -L"C:/SFML-2.4.0/lib" -std=gnu++11 -static-libgcc -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-window -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-window
-INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include"
-CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/SFML-2.4.0/include"
-BIN      = Project1.exe
+OBJ      = LevelEditor.o
+LINKOBJ  = LevelEditor.o
+LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -L"C:/Users/BobreCurva/Documents/SFML-2.4.0-windows-gcc-4.9.2-tdm-64-bit/SFML-2.4.0/lib" -std=c++11 -static-libgcc -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-window -lsfml-graphics -lsfml-window -lsfml-system
+INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/Users/BobreCurva/Documents/SFML-2.4.0-windows-gcc-4.9.2-tdm-64-bit/SFML-2.4.0/include"
+BIN      = LevelEditor.exe
 CXXFLAGS = $(CXXINCS) 
 CFLAGS   = $(INCS) 
 RM       = rm.exe -f
@@ -24,5 +24,5 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
 
-game.o: game.cpp
-	$(CPP) -c game.cpp -o game.o $(CXXFLAGS)
+LevelEditor.o: LevelEditor.cpp
+	$(CPP) -c LevelEditor.cpp -o LevelEditor.o $(CXXFLAGS)
